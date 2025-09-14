@@ -4,7 +4,6 @@ const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 const form = document.getElementById("login");
-
 const msg = document.getElementById("mensagem");
 
 form.addEventListener("submit", async (e) => {
@@ -24,5 +23,6 @@ form.addEventListener("submit", async (e) => {
   } else {
     msg.textContent = "Login realizado com sucesso!";
     console.log("Usuário logado:", data.user);
+    localStorage.setItem("usuarioLogado", JSON.stringify(data.user));
   }
 });
