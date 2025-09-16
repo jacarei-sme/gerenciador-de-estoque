@@ -1,21 +1,23 @@
-// --- INICIALIZAÇÃO E SUPABASE ---
+// IINICIALIZAÇÃO DO SUPABASE
 const supabaseUrl = "https://jhxlbkjulksfrcuwfhcb.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpoeGxia2p1bGtzZnJjdXdmaGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3OTczNjQsImV4cCI6MjA3MzM3MzM2NH0.d6KOZxc1iJaI_wloMpa-xura80Fv-YXKijG2wuz5wZg";
 const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-// --- SELETORES DE ELEMENTOS ---
+// SELETORES DE ELEMENTOS
 const loginSection = document.getElementById('login-section');
 const mainSection = document.getElementById('main-section');
 const movimentacaoSection = document.getElementById('movimentacao-section');
 
+// LOGIN
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('mensagem');
 
+// BOTÃO DA TELA INICIAL
 const btnMovimentacao = document.getElementById('btn-movimentacao');
 const btnVoltar = document.getElementById('btn-voltar-main');
 const btnLogout = document.getElementById('btn-logout');
 
-// --- SELETORES ADICIONAIS PARA O CRUD ---
+// SELETORES ADICIONAIS PARA O CRUD 
 const formProdutoSection = document.getElementById('form-produto-section');
 const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
 const btnVoltarForm = document.getElementById('btn-voltar-form');
@@ -28,9 +30,7 @@ const produtoNomeInput = document.getElementById('produto-nome');
 const produtoDescricaoInput = document.getElementById('produto-descricao');
 const btnCancelarEdicao = document.getElementById('btn-cancelar-edicao');
 
-// --- FUNÇÕES DE CONTROLE DE VISIBILIDADE ---
-
-// Função para mostrar uma seção e esconder as outras
+// FUNÇÕES DE CONTROLE DE VISIBILIDADE
 function showSection(sectionToShow) {
     loginSection.classList.add('hidden');
     mainSection.classList.add('hidden');
@@ -40,8 +40,7 @@ function showSection(sectionToShow) {
     sectionToShow.classList.remove('hidden');
 }
 
-// --- LÓGICA DE AUTENTICAÇÃO ---
-
+// AUTENTICAÇÃO
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.textContent = "Conectando...";
@@ -65,7 +64,7 @@ btnLogout.addEventListener('click', async () => {
     checkAuth();
 });
 
-// --- LÓGICA DE NAVEGAÇÃO ---
+// NAVEGAÇÃO 
 btnMovimentacao.addEventListener('click', () => {
     showSection(movimentacaoSection);
     // Aqui você pode adicionar uma função para carregar os produtos do Supabase
@@ -77,8 +76,7 @@ btnVoltar.addEventListener('click', (e) => {
     showSection(mainSection);
 });
 
-// --- CONTROLE DE INICIALIZAÇÃO ---
-
+// INICIALIZAÇÃO
 function checkAuth() {
     const user = localStorage.getItem('usuarioLogado');
     if (user) {
@@ -89,7 +87,7 @@ function checkAuth() {
     }
 }
 
-// Verifica a autenticação assim que a página é carregada
+// Verifica se o usuário já esta autenticado
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
 });
@@ -100,12 +98,12 @@ btnAdicionarProduto.addEventListener('click', () => {
     showSection(formProdutoSection);
 });
 
-btnVoltarForm.addEventListener('click', (e) => { // ATUALIZADO
+btnVoltarForm.addEventListener('click', (e) => {
     e.preventDefault();
     showSection(mainSection);
 });
 
-// --- NAVEGAÇÃO PARA A SEÇÃO CRUD ---
+// CRUD -- Create Read Update Delete
 btnGerenciarProdutos.addEventListener('click', () => {
     showSection(produtosSection);
     carregarProdutos(); // Carrega os produtos ao entrar na seção
@@ -116,8 +114,7 @@ btnVoltarCrud.addEventListener('click', (e) => {
     showSection(mainSection);
 });
 
-
-// --- FUNÇÕES CRUD ---
+// FUNÇÕES DO CRUD
 
 // READ: Carregar e exibir todos os produtos
 async function carregarProdutos() {
