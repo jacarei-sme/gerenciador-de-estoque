@@ -20,7 +20,6 @@ const formProdutoSection = document.getElementById('form-produto-section');
 const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
 const btnVoltarForm = document.getElementById('btn-voltar-form');
 const formProdutoTitulo = document.getElementById('form-produto-titulo');
-//Adicionado até aqui
 const btnVoltarCrud = document.getElementById('btn-voltar-crud');
 const produtoForm = document.getElementById('produto-form');
 const produtosTbody = document.getElementById('produtos-tbody');
