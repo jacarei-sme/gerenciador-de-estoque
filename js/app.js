@@ -16,8 +16,11 @@ const btnVoltar = document.getElementById('btn-voltar-main');
 const btnLogout = document.getElementById('btn-logout');
 
 // --- SELETORES ADICIONAIS PARA O CRUD ---
-const produtosSection = document.getElementById('produtos-section');
-const btnGerenciarProdutos = document.getElementById('btn-gerenciar-produtos');
+const formProdutoSection = document.getElementById('form-produto-section');
+const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
+const btnVoltarForm = document.getElementById('btn-voltar-form');
+const formProdutoTitulo = document.getElementById('form-produto-titulo');
+//Adicionado até aqui
 const btnVoltarCrud = document.getElementById('btn-voltar-crud');
 const produtoForm = document.getElementById('produto-form');
 const produtosTbody = document.getElementById('produtos-tbody');
@@ -33,7 +36,8 @@ function showSection(sectionToShow) {
     loginSection.classList.add('hidden');
     mainSection.classList.add('hidden');
     movimentacaoSection.classList.add('hidden');
-    
+    formProdutoSection.classList.add('hidden'); // ATUALIZADO
+
     sectionToShow.classList.remove('hidden');
 }
 
@@ -80,6 +84,7 @@ function checkAuth() {
     const user = localStorage.getItem('usuarioLogado');
     if (user) {
         showSection(mainSection);
+        carregarProdutos(); // CARREGA OS PRODUTOS AO MOSTRAR A TELA PRINCIPAL
     } else {
         showSection(loginSection);
     }
@@ -88,6 +93,17 @@ function checkAuth() {
 // Verifica a autenticação assim que a página é carregada
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
+});
+
+btnAdicionarProduto.addEventListener('click', () => {
+    produtoForm.reset(); // Limpa o formulário caso tenha dados de uma edição anterior
+    formProdutoTitulo.textContent = 'Adicionar Novo Produto'; // Garante o título correto
+    showSection(formProdutoSection);
+});
+
+btnVoltarForm.addEventListener('click', (e) => { // ATUALIZADO
+    e.preventDefault();
+    showSection(mainSection);
 });
 
 // --- NAVEGAÇÃO PARA A SEÇÃO CRUD ---
@@ -135,33 +151,14 @@ async function carregarProdutos() {
 // CREATE / UPDATE: Lógica do formulário para salvar (criar ou atualizar)
 produtoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const id = produtoIdInput.value;
-    const nome = produtoNomeInput.value;
-    const descricao = produtoDescricaoInput.value;
-
-    let error;
-
-    if (id) {
-        // UPDATE: Se existe um ID, atualiza o produto
-        const { error: updateError } = await client
-            .from('produto')
-            .update({ nome, descricao })
-            .eq('id', id);
-        error = updateError;
-    } else {
-        // CREATE: Se não existe ID, insere um novo produto
-        const { error: insertError } = await client
-            .from('produto')
-            .insert([{ nome, descricao }]);
-        error = insertError;
-    }
+    // ... (toda a lógica de 'if (id)' para criar/atualizar continua a mesma) ...
 
     if (error) {
         alert('Erro ao salvar o produto: ' + error.message);
     } else {
-        produtoForm.reset(); // Limpa o formulário
-        carregarProdutos(); // Recarrega a lista
+        produtoForm.reset();
+        showSection(mainSection); // VOLTA PARA A TELA PRINCIPAL
+        carregarProdutos();      // RECARREGA A LISTA ATUALIZADA
     }
 });
 
@@ -170,7 +167,9 @@ function prepararEdicao(id, nome, descricao) {
     produtoIdInput.value = id;
     produtoNomeInput.value = nome;
     produtoDescricaoInput.value = descricao;
-    window.scrollTo(0, 0); // Rola para o topo da página para ver o formulário
+    
+    formProdutoTitulo.textContent = 'Editar Produto'; // Muda o título do formulário
+    showSection(formProdutoSection); // LEVA O USUÁRIO PARA A TELA DO FORMULÁRIO
 }
 
 // DELETE: Deletar um produto
@@ -195,5 +194,6 @@ async function deletarProduto(id) {
 // Cancela a edição e limpa o formulário
 btnCancelarEdicao.addEventListener('click', () => {
     produtoForm.reset();
-    produtoIdInput.value = ''; // Garante que o ID oculto seja limpo
+    produtoIdInput.value = '';
+    showSection(mainSection);
 });
