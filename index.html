@@ -1,19 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
+<head>
+    <meta charset="utf-t">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Controle de estoque</title>
+    <title>Controle de Estoque DTI-SME</title>
     <link rel="stylesheet" href="css/pico.min.css"/>
-  </head>
-  <body style="display: grid; place-items: center;">
-    <header class="container">
-      <h1>Bem-vindo"</h1>
-      <p>Você está na pagina inicial do site.</p>
-    </header>
-    <div class="container">
-      <button id="movimentacao">Movimentação</button>
-      <button id="cadastro">Cadastro</button>
+    <style>
+        /* Adiciona um estilo para esconder seções */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body style="display: grid; place-items: center; ">
+
+    <div id="login-section" class="container" style="max-width: 400px; padding-top: 10%;">
+        <header>
+            <h2>Estoque DTI-SME</h2>
+        </header>
+        <main>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <p id="mensagem"></p>
+        </main>
     </div>
-  </body>
+    <!-- Tela inicial (após o login)-->
+    <div id="main-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
+        <header>
+            <h1>Bem-vindo!</h1>
+            <p>Selecione uma opção para continuar.</p>
+        </header>
+        <div class="grid">
+            <button id="btn-movimentacao">Movimentação</button>
+            <button id="btn-gerenciar-produtos">Gerenciar Produtos</button> 
+            <button id="btn-logout" class="secondary outline">Sair</button>
+        </div>
+    </div>
+    <!-- Tela de movimentação -->
+    <div id="movimentacao-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
+        <header>
+            <a href="#" id="btn-voltar-main">← Voltar</a>
+            <h2>Movimentação de Material</h2>
+        </header>
+        <form id="form-material">
+            <div class="grid">
+                <select id="produto-select" required>
+                    <option value="" disabled selected>Selecione um produto</option>
+                </select>               
+                <input type="number" id="quantidade" placeholder="Quantidade" required>
+            </div>
+            <textarea id="descricao" placeholder="Descrição"></textarea>
+            <button type="submit">Registrar Movimentação</button>
+        </form>
+    </div>
+
+    <div id="produtos-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
+        <header>
+            <a href="#" id="btn-voltar-crud">← Voltar</a>
+            <h2>Gerenciar Produtos</h2>
+        </header>
+
+        <form id="produto-form">
+            <input type="hidden" id="produto-id">
+            <div class="grid">
+                <input type="text" id="produto-nome" placeholder="Nome do Produto" required>
+                <input type="text" id="produto-descricao" placeholder="Descrição">
+            </div>
+            <button type="submit">Salvar Produto</button>
+            <button type="reset" class="secondary outline" id="btn-cancelar-edicao">Cancelar</button>
+        </form>
+
+        <hr>
+
+        <h3>Produtos Cadastrados</h3>
+        <figure>
+            <table role="grid" id="produtos-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col" colspan="2">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="produtos-tbody">
+                    </tbody>
+            </table>
+        </figure>
+    </div>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/app.js"></script>
+</body>
 </html>
