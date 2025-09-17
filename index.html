@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
     <head>
-        <meta charset="utf-t">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Controle de Estoque DTI-SME</title>
         <link rel="stylesheet" href="css/pico.min.css"/>
@@ -10,6 +10,8 @@
             .hidden {
                 display: none;
             }
+            .entrada { color: var(--pico-color-green-500); font-weight: bold; }
+            .saida { color: var(--pico-color-red-500); font-weight: bold; }
         </style>
     </head>
     <body style="display: grid; place-items: center; ">
@@ -34,8 +36,10 @@
                 <p>Visão geral do seu estoque.</p>
             </header>
             <div class="grid">
-                <button id="btn-movimentacao">Realizar Movimentação</button>
-                <button id="btn-adicionar-produto">Adicionar Novo Produto</button> <button id="btn-logout" class="secondary outline">Sair</button>
+                <button id="btn-ultimas-movimentacoes">Ver Últimas Movimentações</button>
+                <button id="btn-adicionar-produto">Adicionar Novo Produto</button>
+                <button id="btn-relatorio-completo" class="secondary">Ver Relatório Completo</button>
+                <button id="btn-logout" class="secondary outline">Sair</button>
             </div>
 
             <hr>
@@ -83,9 +87,36 @@
                     <input type="text" id="produto-nome" placeholder="Nome do Produto" required>
                     <input type="text" id="produto-descricao" placeholder="Descrição">
                 </div>
+                <div id="container-quantidade-inicial">
+                    <label for="produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
+                    <input type="number" id="produto-quantidade-inicial" min="0" value="0" required>
+                </div>
                 <button type="submit">Salvar Produto</button>
                 <button type="reset" class="secondary outline" id="btn-cancelar-edicao">Cancelar</button>
             </form>
+        </div>
+        <!-- RELATÓRIO -->
+        <div id="relatorio-section" class="container hidden" style="max-width: 1000px; padding-top: 1%;">
+            <header>
+                <a href="#" id="btn-voltar-relatorio">← Voltar</a>
+                <h2 id="relatorio-titulo">Relatório de Movimentações</h2>
+            </header>
+            <figure>
+                <table role="grid" id="relatorio-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Produto</th>
+                            <th>Tipo</th>
+                            <th>Qtd.</th>
+                            <th>Usuário</th>
+                            <th>Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="relatorio-tbody">
+                        </tbody>
+                </table>
+            </figure>
         </div>
         <dialog id="modal-movimentacao">
             <article>
