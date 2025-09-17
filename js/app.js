@@ -29,6 +29,10 @@ const produtoIdInput = document.getElementById('produto-id');
 const produtoNomeInput = document.getElementById('produto-nome');
 const produtoDescricaoInput = document.getElementById('produto-descricao');
 const btnCancelarEdicao = document.getElementById('btn-cancelar-edicao');
+const modalMovimentacao = document.getElementById('modal-movimentacao');
+const btnFecharModal = document.getElementById('btn-fechar-modal');
+const modalTitulo = document.getElementById('modal-titulo');
+const movimentacaoForm = document.getElementById('movimentacao-form');
 
 // FUNÇÕES DE CONTROLE DE VISIBILIDADE
 function showSection(sectionToShow) {
@@ -118,6 +122,29 @@ btnVoltarCrud.addEventListener('click', (e) => {
 
 // READ: Carregar e exibir todos os produtos
 async function carregarProdutos() {
+    // ETAPA A: Calcular o estoque atual a partir das movimentações
+    let { data: movimentacoes, error: movError } = await client
+        .from('movimentacao')
+        .select('id_produto, tipo, quantidade');
+
+    if (movError) {
+        console.error('Erro ao buscar movimentações:', movError);
+        return;
+    }
+    
+    const estoque = {}; // Ex: { produtoId_1: 10, produtoId_2: 5 }
+    movimentacoes.forEach(mov => {
+        if (!estoque[mov.id_produto]) {
+            estoque[mov.id_produto] = 0;
+        }
+        if (mov.tipo === 'ENTRADA') {
+            estoque[mov.id_produto] += mov.quantidade;
+        } else { // 'SAÍDA'
+            estoque[mov.id_produto] -= mov.quantidade;
+        }
+    });
+
+    // ETAPA B: Buscar os produtos e montar a tabela
     const { data: produtos, error } = await client
         .from('produto')
         .select('*')
@@ -128,17 +155,19 @@ async function carregarProdutos() {
         return;
     }
 
-    // Limpa a tabela antes de preencher
-    produtosTbody.innerHTML = ''; 
-
-    // Cria uma linha na tabela para cada produto
+    produtosTbody.innerHTML = '';
     produtos.forEach(produto => {
+        const quantidadeAtual = estoque[produto.id] || 0; // Pega a quantidade ou 0 se não houver
         const tr = document.createElement('tr');
+
+        // Note a nova coluna <td> para quantidade e os novos botões
         tr.innerHTML = `
             <td>${produto.nome}</td>
             <td>${produto.descricao}</td>
+            <td><strong>${quantidadeAtual}</strong></td>
             <td><button class="outline" onclick="prepararEdicao(${produto.id},'${produto.nome}', '${produto.descricao}')">Editar</button></td>
-            <td><button class="contrast" onclick="deletarProduto(${produto.id})">Excluir</button></td>
+            <td><button onclick="abrirModalMovimentacao(${produto.id}, '${produto.nome}', 'ENTRADA')">Entrada</button></td>
+            <td><button class="contrast" onclick="abrirModalMovimentacao(${produto.id}, '${produto.nome}', 'SAIDA')">Retirada</button></td>
         `;
         produtosTbody.appendChild(tr);
     });
@@ -168,8 +197,58 @@ function prepararEdicao(id, nome, descricao) {
     showSection(formProdutoSection); // LEVA O USUÁRIO PARA A TELA DO FORMULÁRIO
 }
 
+function abrirModalMovimentacao(id, nome, tipo) {
+    modalTitulo.textContent = `Registrar ${tipo === 'ENTRADA' ? 'Entrada' : 'Retirada'} de: ${nome}`;
+    
+    // Preenche os campos ocultos do formulário do modal
+    document.getElementById('mov-produto-id').value = id;
+    document.getElementById('mov-tipo').value = tipo;
+    
+    modalMovimentacao.showModal(); // API nativa do navegador para abrir <dialog>
+}
+
+btnFecharModal.addEventListener('click', () => {
+    movimentacaoForm.reset();
+    modalMovimentacao.close();
+});
+
+movimentacaoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const { auth } = await client;
+    const { data: { user } } = await auth.getUser(); // Pega o usuário logado
+
+    if (!user) {
+        alert('Usuário não autenticado. Faça login novamente.');
+        return;
+    }
+
+    // Coleta os dados do formulário do modal
+    const produtoId = document.getElementById('mov-produto-id').value;
+    const tipo = document.getElementById('mov-tipo').value;
+    const quantidade = parseInt(document.getElementById('mov-quantidade').value);
+    const justificativa = document.getElementById('mov-justificativa').value;
+
+    const { error } = await client
+        .from('movimentacao')
+        .insert([{ 
+            id_produto: produtoId,
+            id_usuario: user.id, // ID do usuário logado
+            tipo: tipo,
+            quantidade: quantidade,
+            justificativa: justificativa
+        }]);
+
+    if (error) {
+        alert('Erro ao registrar movimentação: ' + error.message);
+    } else {
+        movimentacaoForm.reset();
+        modalMovimentacao.close();
+        carregarProdutos(); // Recarrega a tabela principal para atualizar o estoque
+    }
+});
 // DELETE: Deletar um produto
-async function deletarProduto(id) {
+/*async function deletarProduto(id) {
     // Pede confirmação antes de excluir
     if (!confirm('Tem certeza que deseja excluir este produto?')) {
         return;
@@ -185,7 +264,7 @@ async function deletarProduto(id) {
     } else {
         carregarProdutos(); // Recarrega a lista
     }
-}
+}*/
 
 // Cancela a edição e limpa o formulário
 btnCancelarEdicao.addEventListener('click', () => {
