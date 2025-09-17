@@ -1,94 +1,117 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="utf-t">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Controle de Estoque DTI-SME</title>
-    <link rel="stylesheet" href="css/pico.min.css"/>
-    <style>
-        /* Adiciona um estilo para esconder seções */
-        .hidden {
-            display: none;
-        }
-    </style>
-</head>
-<body style="display: grid; place-items: center; ">
-
-    <div id="login-section" class="container" style="max-width: 400px; padding-top: 10%;">
-        <header>
-            <h2>Estoque DTI-SME</h2>
-        </header>
-        <main>
-            <form id="login-form">
-                <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Senha" required>
-                <button type="submit">Entrar</button>
-            </form>
-            <p id="mensagem"></p>
-        </main>
-    </div>
-    <!-- Tela inicial (após o login)-->
-    <div id="main-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
-        <header>
-            <h1>Painel de Controle</h1>
-            <p>Visão geral do seu estoque.</p>
-        </header>
-        <div class="grid">
-            <button id="btn-movimentacao">Realizar Movimentação</button>
-            <button id="btn-adicionar-produto">Adicionar Novo Produto</button> <button id="btn-logout" class="secondary outline">Sair</button>
+    <head>
+        <meta charset="utf-t">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Controle de Estoque DTI-SME</title>
+        <link rel="stylesheet" href="css/pico.min.css"/>
+        <style>
+            /* Esconde as seções */
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+    <body style="display: grid; place-items: center; ">
+        <!--LOGIN-->
+        <div id="login-section" class="container" style="max-width: 20em; padding-top: 10%;">
+            <header>
+                <h2>Estoque DTI-SME</h2>
+            </header>
+            <main>
+                <form id="login-form">
+                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="password" id="password" placeholder="Senha" required>
+                    <button type="submit">Entrar</button>
+                </form>
+                <p id="mensagem"></p>
+            </main>
         </div>
+        <!-- MAIN -->
+        <div id="main-section" class="container hidden" style="max-width: auto; padding-top: 1%;">
+            <header>
+                <h1>Painel de Controle</h1>
+                <p>Visão geral do seu estoque.</p>
+            </header>
+            <div class="grid">
+                <button id="btn-movimentacao">Realizar Movimentação</button>
+                <button id="btn-adicionar-produto">Adicionar Novo Produto</button> <button id="btn-logout" class="secondary outline">Sair</button>
+            </div>
 
-        <hr>
+            <hr>
 
-        <h3>Produtos em Estoque</h3>
-        <figure>
-            <table role="grid" id="produtos-table">
-                <thead>
-                    <tr>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Descrição</th>
-                        <th scope="col" colspan="2">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="produtos-tbody">
+            <h3>Produtos em Estoque</h3>
+            <figure>
+                <table role="grid" id="produtos-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col">Estoque</th> <th scope="col" colspan="3">Ações</th> </tr>
+                    </thead>
+                    <tbody id="produtos-tbody">
                     </tbody>
-            </table>
-        </figure>
-    </div>
-    <!-- Tela de movimentação -->
-    <div id="movimentacao-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
-        <header>
-            <a href="#" id="btn-voltar-main">← Voltar</a>
-            <h2>Movimentação de Material</h2>
-        </header>
-        <form id="form-material">
-            <div class="grid">
-                <select id="produto-select" required>
-                    <option value="" disabled selected>Selecione um produto</option>
-                </select>               
-                <input type="number" id="quantidade" placeholder="Quantidade" required>
-            </div>
-            <textarea id="descricao" placeholder="Descrição"></textarea>
-            <button type="submit">Registrar Movimentação</button>
-        </form>
-    </div>
-    <!--- Aqui fica a seção do estoque-->
-    <div id="form-produto-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
-        <header>
-            <a href="#" id="btn-voltar-form">← Voltar</a>
-            <h2 id="form-produto-titulo">Adicionar Novo Produto</h2> </header>
+                </table>
+            </figure>
+        </div>
+        <!-- MOVIMENTAÇÃO -->
+        <div id="movimentacao-section" class="container hidden" style="max-width: auto; padding-top: 1%;">
+            <header>
+                <a href="#" id="btn-voltar-main">← Voltar</a>
+                <h2>Movimentação de Material</h2>
+            </header>
+            <form id="form-material">
+                <div class="grid">
+                    <select id="produto-select" required>
+                        <option value="" disabled selected>Selecione um produto</option>
+                    </select>               
+                    <input type="number" id="quantidade" placeholder="Quantidade" required>
+                </div>
+                <textarea id="descricao" placeholder="Descrição"></textarea>
+                <button type="submit">Registrar Movimentação</button>
+            </form>
+        </div>
+        <!--- PRODUTOS-->
+        <div id="form-produto-section" class="container hidden" style="max-width: auto; padding-top: 1%;">
+            <header>
+                <a href="#" id="btn-voltar-form">← Voltar</a>
+                <h2 id="form-produto-titulo">Adicionar Novo Produto</h2> </header>
 
-        <form id="produto-form">
-            <input type="hidden" id="produto-id">
-            <div class="grid">
-                <input type="text" id="produto-nome" placeholder="Nome do Produto" required>
-                <input type="text" id="produto-descricao" placeholder="Descrição">
-            </div>
-            <button type="submit">Salvar Produto</button>
-            <button type="reset" class="secondary outline" id="btn-cancelar-edicao">Cancelar</button>
-        </form>
-    </div>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="js/app.js"></script>
-</body>
+            <form id="produto-form">
+                <input type="hidden" id="produto-id">
+                <div class="grid">
+                    <input type="text" id="produto-nome" placeholder="Nome do Produto" required>
+                    <input type="text" id="produto-descricao" placeholder="Descrição">
+                </div>
+                <button type="submit">Salvar Produto</button>
+                <button type="reset" class="secondary outline" id="btn-cancelar-edicao">Cancelar</button>
+            </form>
+        </div>
+        <dialog id="modal-movimentacao">
+            <article>
+                <header>
+                <button aria-label="Close" rel="prev" id="btn-fechar-modal"></button>
+                <h3 id="modal-titulo">Registrar Movimentação</h3>
+                </header>
+                <form id="movimentacao-form">
+                    <input type="hidden" id="mov-produto-id">
+                    <input type="hidden" id="mov-tipo">
+                    
+                    <label for="mov-quantidade">Quantidade</label>
+                    <input type="number" id="mov-quantidade" min="1" required>
+                    
+                    <label for="mov-justificativa">Justificativa (Opcional)</label>
+                    <textarea id="mov-justificativa" rows="3"></textarea>
+                    
+                    <footer>
+                        <button type="submit">Confirmar</button>
+                    </footer>
+                </form>
+            </article>
+        </dialog>
+        <!--SCRIPT DO SUPABASE-->
+        <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+        <!--SCRIPT PRÓPRIO-->
+        <script src="js/app.js"></script>
+    </body>
 </html>
