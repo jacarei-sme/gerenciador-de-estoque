@@ -170,7 +170,7 @@ async function carregarRelatorio(limite = null) {
             <td>${mov.produto_nome}</td>
             <td><span class="${mov.tipo === 'ENTRADA' ? 'entrada' : 'saida'}">${mov.tipo}</span></td>
             <td>${mov.quantidade}</td>
-            <td>${mov.usuario_email}</td>
+            <td>${mov.usuario_nome || 'Usuário não definido'}</td> 
             <td>${mov.justificativa || '-'}</td>
         `;
         relatorioTbody.appendChild(tr);
