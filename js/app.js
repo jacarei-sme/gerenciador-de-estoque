@@ -101,7 +101,7 @@ btnVoltarRelatorio.addEventListener('click', (e) => {
     showSection(mainSection);
 });
 
-// INICIALIZAÇÃO
+// INICIALIZAÇÃO / LOGIN
 function checkAuth() {
     const user = localStorage.getItem('usuarioLogado');
     if (user) {
@@ -138,7 +138,7 @@ btnCancelarEdicao.addEventListener('click', () => {
 
 async function carregarRelatorio(limite = null) {
     let query = client
-        .from('relatorio_completo')
+        .from('relatorio_completo') //Chama a VIEW criada no supabase contendo as movimentações e usuário que fez.
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -147,7 +147,7 @@ async function carregarRelatorio(limite = null) {
     }
 
     const { data, error } = await query;
-
+          
     if (error) {
         console.error('Erro ao carregar relatório:', error);
         alert('Não foi possível carregar o relatório. Verifique se a View "relatorio_completo" foi criada no Supabase.');
@@ -177,9 +177,9 @@ async function carregarRelatorio(limite = null) {
     });
 }
 
-// CRUD -- Create Read Update Delete
+// CRU -- Create Read Update 
 
-// READ: Carregar e exibir todos os produtos
+// READ: Carregar e exibir todos os produtos (REVER carregarProdutos())
 async function carregarProdutos() {
     // ETAPA A: Calcular o estoque atual a partir das movimentações
     let { data: movimentacoes, error: movError } = await client
@@ -232,7 +232,7 @@ async function carregarProdutos() {
     });
 }
 
-// CREATE / UPDATE: Lógica do formulário para salvar (criar ou atualizar)
+// CREATE e UPDATE
 produtoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -241,7 +241,7 @@ produtoForm.addEventListener('submit', async (e) => {
     const descricao = document.getElementById('produto-descricao').value;
     const quantidade = parseInt(document.getElementById('produto-quantidade-inicial').value);
 
-    // --- LÓGICA DE ATUALIZAÇÃO (quando está editando um produto) ---
+    //ATUALIZAÇÃO DE PRODUTO
     if (id) {
         const { error } = await client
             .from('produto')
@@ -254,11 +254,10 @@ produtoForm.addEventListener('submit', async (e) => {
             showSection(mainSection);
             carregarProdutos();
         }
-        return; // Termina a execução aqui
+        return;
     }
 
-    // --- LÓGICA DE CRIAÇÃO (para um novo produto) ---
-    // 1. Insere o novo produto e usa .select() para pegar o ID de volta
+    //NOVO PRODUTO
     const { data: novoProduto, error: produtoError } = await client
         .from('produto')
         .insert([{ nome, descricao, quantidade }])
@@ -269,7 +268,7 @@ produtoForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // 2. Se a quantidade inicial for maior que 0, cria a primeira movimentação
+    //Se a quantidade inicial for maior que 0, cria a primeira movimentação
     if (quantidade > 0) {
         const { auth } = await client;
         const { data: { user } } = await auth.getUser();
@@ -290,7 +289,7 @@ produtoForm.addEventListener('submit', async (e) => {
         }
     }
 
-    // 3. Sucesso! Limpa tudo e volta para a tela principal
+    //Limpa e volta a tela principal
     produtoForm.reset();
     showSection(mainSection);
     carregarProdutos();
@@ -323,37 +322,28 @@ btnFecharModal.addEventListener('click', () => {
 });
 
 movimentacaoForm.addEventListener('submit', async (e) => {
+
     e.preventDefault();
     
-    const { auth } = await client;
-    const { data: { user } } = await auth.getUser(); // Pega o usuário logado
-
-    if (!user) {
-        alert('Usuário não autenticado. Faça login novamente.');
-        return;
-    }
-
-    // Coleta os dados do formulário do modal
     const produtoId = document.getElementById('mov-produto-id').value;
     const tipo = document.getElementById('mov-tipo').value;
     const quantidade = parseInt(document.getElementById('mov-quantidade').value);
-    const justificativa = document.getElementById('mov-justificativa').value;
+    const observacao = document.getElementById('mov-justificativa').value; 
 
-    const { error } = await client
-        .from('movimentacao')
-        .insert([{ 
-            id_produto: produtoId,
-            id_usuario: user.id, // ID do usuário logado
-            tipo: tipo,
-            quantidade: quantidade,
-            observacao: justificativa
-        }]);
+    // Chama a função do supabase RPC
+    const { error } = await client.rpc('registrar_movimentacao_e_atualizar_estoque', {
+        produto_id_param: produtoId,
+        quantidade_param: quantidade,
+        tipo_param: tipo,
+        observacao_param: observacao
+    });
 
     if (error) {
         alert('Erro ao registrar movimentação: ' + error.message);
+        console.error('Erro na chamada RPC:', error);
     } else {
         movimentacaoForm.reset();
         modalMovimentacao.close();
-        carregarProdutos(); // Recarrega a tabela principal para atualizar o estoque
+        carregarProdutos();
     }
 });
