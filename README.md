@@ -1,4 +1,81 @@
-Bem vindo!
+Com certeza! Com base nos arquivos do seu projeto, preparei uma sugestão de README.md mais completo e informativo para o seu repositório no GitHub. Ele foi pensado para explicar o que o projeto faz, quais tecnologias utiliza e como ele funciona.
 
-Este é o repositório usado pelo Grupo 012 na criação de um controle de estoque para o setor de TI da Secretaria Municipal de Educação de Jacareí.
-O repositório trata mais de uma maneira para estarmos criando um controle de versões nas edições do código, assim como também deixar salvo uma maneira encontrada pelo grupo na tarefa do Projeto Integrador do 2º Semestre de 2025.
+Aqui está a sugestão:
+
+Sistema de Controle de Estoque - DTI/SME
+
+Sobre o Projeto
+
+Este é um sistema de controle de estoque desenvolvido como parte do Projeto Integrador do 2º Semestre de 2025 para o setor de TI da Secretaria Municipal de Educação de Jacareí.
+
+A aplicação web permite o gerenciamento completo de produtos, incluindo cadastro, edição, e o registro de todas as movimentações de entrada e saída, oferecendo uma visão clara e atualizada do inventário.
+
+✨ Funcionalidades Principais
+
+O sistema foi construído para ser uma ferramenta prática e funcional para a gestão de estoque, com as seguintes características:
+
+    🔐 Autenticação de Usuários: Acesso seguro ao sistema através de login com e-mail e senha.
+
+    📦 Gestão de Produtos (CRUD):
+
+        Criação: Adicione novos produtos ao estoque com nome, descrição e quantidade inicial.
+
+        Visualização: Liste todos os produtos em uma tabela clara, com o estoque atual visível.
+
+        Atualização: Edite as informações de produtos já cadastrados.
+
+        Exclusão: Por enquanto não implementado.
+
+    📈 Controle de Movimentação:
+
+        Registre entradas de novos itens no estoque.
+
+        Registre retiradas (saídas) de material, com um campo opcional para justificativa.
+
+    📊 Relatórios Detalhados:
+
+        Gere um relatório completo com todo o histórico de movimentações.
+
+        Visualize rapidamente as últimas 20 movimentações para um acompanhamento ágil.
+
+        Os relatórios exibem data, produto, tipo de movimentação (entrada ou saída), quantidade, usuário responsável e observações.
+
+    💻 Interface Intuitiva: Design simples e funcional, utilizando o framework Pico.css para uma aparência limpa e responsiva sem a necessidade de configurações complexas.
+
+🚀 Tecnologias Utilizadas
+
+    Front-end:
+
+        HTML5
+
+        CSS3 com Pico.css
+
+        JavaScript (Vanilla)
+
+    Back-end (BaaS - Backend as a Service):
+
+        Supabase: Utilizado para autenticação de usuários e como banco de dados PostgreSQL para armazenar produtos e movimentações.
+
+🏁 Como Utilizar
+
+O sistema é dividido em algumas seções principais:
+
+    Login: A tela inicial onde o usuário deve se autenticar.
+
+    Painel Principal: Após o login, o usuário tem acesso à lista de produtos em estoque e às ações principais:
+
+        Adicionar um novo produto.
+
+        Gerar relatórios de movimentação.
+
+    Cadastro e Edição de Produto: Formulário para criar um novo item ou alterar um existente.
+
+    Registro de Movimentação: Uma janela modal permite registrar entradas e saídas de forma rápida para cada produto diretamente da tela principal.
+
+    Relatórios: Uma tela dedicada para a visualização do histórico de movimentações.
+
+Todo o controle de estado e a renderização das diferentes seções são gerenciados via JavaScript, manipulando a visibilidade dos elementos no DOM.
+
+Contribuidores
+
+    Grupo 012 - Projeto Integrador
