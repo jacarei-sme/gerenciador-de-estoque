@@ -38,6 +38,7 @@
             <div class="grid">
                 <button id="btn-ultimas-movimentacoes">Ver Últimas Movimentações</button>
                 <button id="btn-adicionar-produto">Adicionar Novo Produto</button>
+                <button id="btn-gerenciar-categorias" class="secondary">Gerenciar Categorias</button>
                 <button id="btn-relatorio-completo" class="secondary">Ver Relatório Completo</button>
                 <button id="btn-logout" class="secondary outline">Sair</button>
             </div>
@@ -85,15 +86,41 @@
                 <input type="hidden" id="produto-id">
                 <div class="grid">
                     <input type="text" id="produto-nome" placeholder="Nome do Produto" required>
-                    <input type="text" id="produto-descricao" placeholder="Descrição">
+                    
+                    <select id="produto-categoria-select" required>
+                        <option value="">Selecione uma categoria...</option>
+                    </select>
                 </div>
                 <div id="container-quantidade-inicial">
                     <label for="produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
                     <input type="number" id="produto-quantidade-inicial" min="0" value="0" required>
                 </div>
+                <textarea id="produto-descricao" placeholder="Descrição"></textarea>
                 <button type="submit">Salvar Produto</button>
                 <button type="reset" class="secondary outline" id="btn-cancelar-edicao">Cancelar</button>
             </form>
+        </div>
+        <!-- CATEGORIAS -->
+        <div id="categorias-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
+            <header>
+                <a href="#" id="btn-voltar-categorias">← Voltar</a>
+                <h2>Gerenciar Categorias</h2>
+            </header>
+
+            <form id="categoria-form">
+                <input type="hidden" id="categoria-id">
+                <input type="text" id="categoria-nome" placeholder="Nome da Categoria" required>
+                <button type="submit">Salvar Categoria</button>
+            </form>
+            <hr>
+            <h3>Categorias Existentes</h3>
+            <table role="grid">
+                <thead>
+                    <tr><th>Nome</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="categorias-tbody">
+                    </tbody>
+            </table>
         </div>
         <!-- RELATÓRIO -->
         <div id="relatorio-section" class="container hidden" style="max-width: 1000px; padding-top: 1%;">

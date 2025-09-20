@@ -122,6 +122,7 @@ btnAdicionarProduto.addEventListener('click', () => {
     document.getElementById('produto-quantidade-inicial').value = '0'; // Reseta para 0
     formProdutoTitulo.textContent = 'Adicionar Novo Produto';
     containerQuantidadeInicial.style.display = 'block'; // MOSTRA o campo de quantidade
+    popularDropdownCategorias();
     showSection(formProdutoSection);
 });
 
@@ -240,12 +241,13 @@ produtoForm.addEventListener('submit', async (e) => {
     const nome = document.getElementById('produto-nome').value;
     const descricao = document.getElementById('produto-descricao').value;
     const quantidade = parseInt(document.getElementById('produto-quantidade-inicial').value);
+    const id_categoria = produtoCategoriaSelect.value;
 
     //ATUALIZAÇÃO DE PRODUTO
     if (id) {
         const { error } = await client
             .from('produto')
-            .update({ nome, descricao, quantidade })
+            .update({ nome, descricao, quantidade, id_categoria })
             .eq('id', id);
 
         if (error) {
@@ -260,7 +262,7 @@ produtoForm.addEventListener('submit', async (e) => {
     //NOVO PRODUTO
     const { data: novoProduto, error: produtoError } = await client
         .from('produto')
-        .insert([{ nome, descricao, quantidade }])
+        .insert([{ nome, descricao, quantidade, id_categoria }])
         .select();
 
     if (produtoError) {
@@ -296,10 +298,14 @@ produtoForm.addEventListener('submit', async (e) => {
 });
 
 // Função para preparar o formulário para edição
-function prepararEdicao(id, nome, descricao) {
+function prepararEdicao(id, nome, descricao, id_categoria) {
     produtoIdInput.value = id;
     produtoNomeInput.value = nome;
     produtoDescricaoInput.value = descricao;
+
+    popularDropdownCategorias().then(() => { // Garante que as opções carreguem antes de selecionar
+        produtoCategoriaSelect.value = id_categoria;
+    });
     
     formProdutoTitulo.textContent = 'Editar Produto';
     containerQuantidadeInicial.style.display = 'none'; // ESCONDE o campo de quantidade
@@ -347,3 +353,83 @@ movimentacaoForm.addEventListener('submit', async (e) => {
         carregarProdutos();
     }
 });
+
+// CATEGORIA
+const categoriasSection = document.getElementById('categorias-section');
+const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
+const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
+const categoriaForm = document.getElementById('categoria-form');
+const categoriasTbody = document.getElementById('categorias-tbody');
+
+// Navegação
+btnGerenciarCategorias.addEventListener('click', () => {
+    showSection(categoriasSection);
+    carregarCategorias();
+});
+btnVoltarCategorias.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(mainSection);
+});
+
+// Carregar e exibir categorias
+async function carregarCategorias() {
+    const { data, error } = await client.from('categorias').select('*').order('nome');
+    if (error) {
+        console.error("Erro ao carregar categorias:", error);
+        return;
+    }
+    categoriasTbody.innerHTML = '';
+    data.forEach(cat => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${cat.nome}</td>
+            <td><button class="secondary outline" onclick="deletarCategoria(${cat.id})">Excluir</button></td>
+        `;
+        categoriasTbody.appendChild(tr);
+    });
+}
+
+// Salvar nova categoria
+categoriaForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('categoria-nome').value;
+    const { error } = await client.from('categoria').insert([{ nome: nome }]);
+    if (error) {
+        alert("Erro ao salvar categoria: " + error.message);
+    } else {
+        categoriaForm.reset();
+        carregarCategorias();
+    }
+});
+
+// Deletar categoria
+async function deletarCategoria(id) {
+    if (!confirm("Tem certeza? Excluir uma categoria pode afetar produtos existentes.")) {
+        return;
+    }
+    const { error } = await client.from('categoria').delete().eq('id', id);
+    if (error) {
+        alert("Erro ao excluir categoria: " + error.message);
+    } else {
+        carregarCategorias();
+    }
+}
+
+//Selecionar a Categoria ao adicionar/editar produto.
+const produtoCategoriaSelect = document.getElementById('produto-categoria-select');
+
+async function popularDropdownCategorias() {
+    const { data, error } = await client.from('categorias').select('*').order('nome');
+    if (error) {
+        console.error("Erro ao buscar categorias para o dropdown:", error);
+        return;
+    }
+    // Limpa opções antigas (exceto a primeira "Selecione...")
+    produtoCategoriaSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
+    data.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = cat.nome;
+        produtoCategoriaSelect.appendChild(option);
+    });
+}
