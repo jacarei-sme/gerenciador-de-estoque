@@ -3,23 +3,23 @@ const supabaseUrl = "https://jhxlbkjulksfrcuwfhcb.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpoeGxia2p1bGtzZnJjdXdmaGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3OTczNjQsImV4cCI6MjA3MzM3MzM2NH0.d6KOZxc1iJaI_wloMpa-xura80Fv-YXKijG2wuz5wZg";
 const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-// SELETORES DE ELEMENTOS
+// SELETORES DE ELEMENTOS - SEÇÕES PRINCIPAIS
 const loginSection = document.getElementById('login-section');
 const mainSection = document.getElementById('main-section');
-const movimentacaoSection = document.getElementById('movimentacao-section');
+const formProdutoSection = document.getElementById('form-produto-section');
+const categoriasSection = document.getElementById('categorias-section');
+const relatorioSection = document.getElementById('relatorio-section');
 
 // LOGIN
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('mensagem');
 
 // BOTÃO DA TELA INICIAL
-//const btnMovimentacao = document.getElementById('btn-movimentacao');
 const btnUltimasMovimentacoes = document.getElementById('btn-ultimas-movimentacoes');
 const btnVoltar = document.getElementById('btn-voltar-main');
 const btnLogout = document.getElementById('btn-logout');
 
 // SELETORES ADICIONAIS PARA O CRUD 
-const formProdutoSection = document.getElementById('form-produto-section');
 const produtoForm = document.getElementById('produto-form');
 const movimentacaoForm = document.getElementById('movimentacao-form');
 const formProdutoTitulo = document.getElementById('form-produto-titulo');
@@ -29,7 +29,6 @@ const btnVoltarForm = document.getElementById('btn-voltar-form');
 const btnVoltarCrud = document.getElementById('btn-voltar-crud');
 const btnCancelarEdicao = document.getElementById('btn-cancelar-edicao');
 const btnFecharModal = document.getElementById('btn-fechar-modal');
-const relatorioSection = document.getElementById('relatorio-section');
 const relatorioTbody = document.getElementById('relatorio-tbody');
 const relatorioTitulo = document.getElementById('relatorio-titulo');
 const btnRelatorioCompleto = document.getElementById('btn-relatorio-completo');
@@ -50,10 +49,11 @@ function showSection(sectionToShow) {
     loginSection.classList.add('hidden');
     mainSection.classList.add('hidden');
     formProdutoSection.classList.add('hidden');
-    relatorioSection.classList.add('hidden'); // <-- ADICIONE ESTA LINHA
-    
+    relatorioSection.classList.add('hidden');
+    categoriasSection.classList.add('hidden');    
     sectionToShow.classList.remove('hidden');
 }
+
 // AUTENTICAÇÃO
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -64,11 +64,14 @@ loginForm.addEventListener('submit', async (e) => {
 
     const { data, error } = await client.auth.signInWithPassword({ email, password });
 
-    if (error) {
-        msg.textContent = "Erro: " + error.message;
-    } else {
+    if(error){
+        msg.textContent = "Usuário ou Senha incorretos";
+        //msg.textoContent = error.message; Modificado o erro padrão! 
+    }
+    else {
         localStorage.setItem("usuarioLogado", JSON.stringify(data.user));
-        checkAuth(); // Verifica a autenticação e redireciona a visualização
+        msg.textContent = ""; //Evita que o texto "Conectando" após usar o botão "Sair"
+        checkAuth();
     }
 });
 
@@ -78,12 +81,7 @@ btnLogout.addEventListener('click', async () => {
     checkAuth();
 });
 
-// NAVEGAÇÃO 
-btnVoltar.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection(mainSection);
-});
-
+//MOVIMENTAÇÃO
 btnUltimasMovimentacoes.addEventListener('click', () => {
     relatorioTitulo.textContent = 'Últimas 20 Movimentações';
     carregarRelatorio(20); 
@@ -92,7 +90,7 @@ btnUltimasMovimentacoes.addEventListener('click', () => {
 
 btnRelatorioCompleto.addEventListener('click', () => {
     relatorioTitulo.textContent = 'Relatório de Movimentações';
-    carregarRelatorio(); // Sem limite
+    carregarRelatorio();
     showSection(relatorioSection);
 });
 
@@ -106,7 +104,7 @@ function checkAuth() {
     const user = localStorage.getItem('usuarioLogado');
     if (user) {
         showSection(mainSection);
-        carregarProdutos(); // CARREGA OS PRODUTOS AO MOSTRAR A TELA PRINCIPAL
+        carregarProdutos();
     } else {
         showSection(loginSection);
     }
@@ -119,9 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 btnAdicionarProduto.addEventListener('click', () => {
     produtoForm.reset(); 
-    document.getElementById('produto-quantidade-inicial').value = '0'; // Reseta para 0
+    document.getElementById('produto-quantidade-inicial').value = '0'; //Reseta o valor do formumário para 0
     formProdutoTitulo.textContent = 'Adicionar Novo Produto';
-    containerQuantidadeInicial.style.display = 'block'; // MOSTRA o campo de quantidade
+    containerQuantidadeInicial.style.display = 'block';
     popularDropdownCategorias();
     showSection(formProdutoSection);
 });
@@ -355,7 +353,6 @@ movimentacaoForm.addEventListener('submit', async (e) => {
 });
 
 // CATEGORIA
-const categoriasSection = document.getElementById('categorias-section');
 const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
 const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
 const categoriaForm = document.getElementById('categoria-form');
@@ -369,6 +366,7 @@ btnGerenciarCategorias.addEventListener('click', () => {
 btnVoltarCategorias.addEventListener('click', (e) => {
     e.preventDefault();
     showSection(mainSection);
+    //FALTA ZERAR AS CONSTANTES E TAMBÉM FECHAR A SEÇÃO
 });
 
 // Carregar e exibir categorias
@@ -392,8 +390,8 @@ async function carregarCategorias() {
 // Salvar nova categoria
 categoriaForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const nome = document.getElementById('categoria-nome').value;
-    const { error } = await client.from('categoria').insert([{ nome: nome }]);
+    const nomeCategoria = document.getElementById('categoria-nome').value;
+    const { error } = await client.from('categoria').insert([{ nome: nomeCategoria }]);
     if (error) {
         alert("Erro ao salvar categoria: " + error.message);
     } else {

@@ -60,28 +60,34 @@
             </figure>
         </div>
         <!-- MOVIMENTAÇÃO -->
-        <div id="movimentacao-section" class="container hidden" style="max-width: auto; padding-top: 1%;">
-            <header>
-                <a href="#" id="btn-voltar-main">← Voltar</a>
-                <h2>Movimentação de Material</h2>
-            </header>
-            <form id="form-material">
-                <div class="grid">
-                    <select id="produto-select" required>
-                        <option value="" disabled selected>Selecione um produto</option>
-                    </select>               
-                    <input type="number" id="quantidade" placeholder="Quantidade" required>
-                </div>
-                <textarea id="descricao" placeholder="Descrição"></textarea>
-                <button type="submit">Registrar Movimentação</button>
-            </form>
-        </div>
+        <dialog id="modal-movimentacao">
+            <article>
+                <header>
+                    <button aria-label="Close" rel="prev" id="btn-fechar-modal"></button>
+                    <h3 id="modal-titulo">Registrar Movimentação</h3>
+                </header>
+                <form id="movimentacao-form">
+                    <input type="hidden" id="mov-produto-id">
+                    <input type="hidden" id="mov-tipo">
+                    
+                    <label for="mov-quantidade">Quantidade</label>
+                    <input type="number" id="mov-quantidade" min="1" required>
+                    
+                    <label for="mov-justificativa">Justificativa (Opcional)</label>
+                    <textarea id="mov-justificativa" rows="3"></textarea>
+                    
+                    <footer>
+                        <button type="submit">Confirmar</button>
+                    </footer>
+                </form>
+            </article>
+        </dialog>
         <!--- PRODUTOS-->
-        <div id="form-produto-section" class="container hidden" style="max-width: auto; padding-top: 1%;">
+        <div id="form-produto-section" class="container hidden" style="max-width: 40em; padding-top: 1%;">
             <header>
                 <a href="#" id="btn-voltar-form">← Voltar</a>
-                <h2 id="form-produto-titulo">Adicionar Novo Produto</h2> </header>
-
+                <h2 id="form-produto-titulo">Adicionar Novo Produto</h2> 
+            </header>
             <form id="produto-form">
                 <input type="hidden" id="produto-id">
                 <div class="grid">
@@ -101,12 +107,11 @@
             </form>
         </div>
         <!-- CATEGORIAS -->
-        <div id="categorias-section" class="container hidden" style="max-width: 800px; padding-top: 10%;">
+        <div id="categorias-section" class="container hidden" style="max-width: 40em; padding-top: 1%;">
             <header>
                 <a href="#" id="btn-voltar-categorias">← Voltar</a>
                 <h2>Gerenciar Categorias</h2>
             </header>
-
             <form id="categoria-form">
                 <input type="hidden" id="categoria-id">
                 <input type="text" id="categoria-nome" placeholder="Nome da Categoria" required>
@@ -123,7 +128,7 @@
             </table>
         </div>
         <!-- RELATÓRIO -->
-        <div id="relatorio-section" class="container hidden" style="max-width: 1000px; padding-top: 1%;">
+        <div id="relatorio-section" class="container hidden" style="max-width: 40em; padding-top: 1%;">
             <header>
                 <a href="#" id="btn-voltar-relatorio">← Voltar</a>
                 <h2 id="relatorio-titulo">Relatório de Movimentações</h2>
@@ -145,28 +150,6 @@
                 </table>
             </figure>
         </div>
-        <dialog id="modal-movimentacao">
-            <article>
-                <header>
-                <button aria-label="Close" rel="prev" id="btn-fechar-modal"></button>
-                <h3 id="modal-titulo">Registrar Movimentação</h3>
-                </header>
-                <form id="movimentacao-form">
-                    <input type="hidden" id="mov-produto-id">
-                    <input type="hidden" id="mov-tipo">
-                    
-                    <label for="mov-quantidade">Quantidade</label>
-                    <input type="number" id="mov-quantidade" min="1" required>
-                    
-                    <label for="mov-justificativa">Justificativa (Opcional)</label>
-                    <textarea id="mov-justificativa" rows="3"></textarea>
-                    
-                    <footer>
-                        <button type="submit">Confirmar</button>
-                    </footer>
-                </form>
-            </article>
-        </dialog>
         <!--SCRIPT DO SUPABASE-->
         <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
         <!--SCRIPT PRÓPRIO-->
