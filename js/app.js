@@ -101,7 +101,7 @@ btnVoltarRelatorio.addEventListener('click', (e) => {
     showSection(mainSection);
 });
 
-// INICIALIZAÇÃO
+// INICIALIZAÇÃO / LOGIN
 function checkAuth() {
     const user = localStorage.getItem('usuarioLogado');
     if (user) {
@@ -122,6 +122,7 @@ btnAdicionarProduto.addEventListener('click', () => {
     document.getElementById('produto-quantidade-inicial').value = '0'; // Reseta para 0
     formProdutoTitulo.textContent = 'Adicionar Novo Produto';
     containerQuantidadeInicial.style.display = 'block'; // MOSTRA o campo de quantidade
+    popularDropdownCategorias();
     showSection(formProdutoSection);
 });
 
@@ -138,7 +139,7 @@ btnCancelarEdicao.addEventListener('click', () => {
 
 async function carregarRelatorio(limite = null) {
     let query = client
-        .from('relatorio_completo')
+        .from('relatorio_completo') //Chama a VIEW criada no supabase contendo as movimentações e usuário que fez.
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -147,7 +148,7 @@ async function carregarRelatorio(limite = null) {
     }
 
     const { data, error } = await query;
-
+          
     if (error) {
         console.error('Erro ao carregar relatório:', error);
         alert('Não foi possível carregar o relatório. Verifique se a View "relatorio_completo" foi criada no Supabase.');
@@ -170,16 +171,16 @@ async function carregarRelatorio(limite = null) {
             <td>${mov.produto_nome}</td>
             <td><span class="${mov.tipo === 'ENTRADA' ? 'entrada' : 'saida'}">${mov.tipo}</span></td>
             <td>${mov.quantidade}</td>
-            <td>${mov.usuario_email}</td>
+            <td>${mov.usuario_nome || 'Usuário não definido'}</td> 
             <td>${mov.justificativa || '-'}</td>
         `;
         relatorioTbody.appendChild(tr);
     });
 }
 
-// CRUD -- Create Read Update Delete
+// CRU -- Create Read Update 
 
-// READ: Carregar e exibir todos os produtos
+// READ: Carregar e exibir todos os produtos (REVER carregarProdutos())
 async function carregarProdutos() {
     // ETAPA A: Calcular o estoque atual a partir das movimentações
     let { data: movimentacoes, error: movError } = await client
@@ -232,7 +233,7 @@ async function carregarProdutos() {
     });
 }
 
-// CREATE / UPDATE: Lógica do formulário para salvar (criar ou atualizar)
+// CREATE e UPDATE
 produtoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -240,12 +241,13 @@ produtoForm.addEventListener('submit', async (e) => {
     const nome = document.getElementById('produto-nome').value;
     const descricao = document.getElementById('produto-descricao').value;
     const quantidade = parseInt(document.getElementById('produto-quantidade-inicial').value);
+    const id_categoria = produtoCategoriaSelect.value;
 
-    // --- LÓGICA DE ATUALIZAÇÃO (quando está editando um produto) ---
+    //ATUALIZAÇÃO DE PRODUTO
     if (id) {
         const { error } = await client
             .from('produto')
-            .update({ nome, descricao, quantidade })
+            .update({ nome, descricao, quantidade, id_categoria })
             .eq('id', id);
 
         if (error) {
@@ -254,14 +256,13 @@ produtoForm.addEventListener('submit', async (e) => {
             showSection(mainSection);
             carregarProdutos();
         }
-        return; // Termina a execução aqui
+        return;
     }
 
-    // --- LÓGICA DE CRIAÇÃO (para um novo produto) ---
-    // 1. Insere o novo produto e usa .select() para pegar o ID de volta
+    //NOVO PRODUTO
     const { data: novoProduto, error: produtoError } = await client
         .from('produto')
-        .insert([{ nome, descricao, quantidade }])
+        .insert([{ nome, descricao, quantidade, id_categoria }])
         .select();
 
     if (produtoError) {
@@ -269,7 +270,7 @@ produtoForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // 2. Se a quantidade inicial for maior que 0, cria a primeira movimentação
+    //Se a quantidade inicial for maior que 0, cria a primeira movimentação
     if (quantidade > 0) {
         const { auth } = await client;
         const { data: { user } } = await auth.getUser();
@@ -290,17 +291,21 @@ produtoForm.addEventListener('submit', async (e) => {
         }
     }
 
-    // 3. Sucesso! Limpa tudo e volta para a tela principal
+    //Limpa e volta a tela principal
     produtoForm.reset();
     showSection(mainSection);
     carregarProdutos();
 });
 
 // Função para preparar o formulário para edição
-function prepararEdicao(id, nome, descricao) {
+function prepararEdicao(id, nome, descricao, id_categoria) {
     produtoIdInput.value = id;
     produtoNomeInput.value = nome;
     produtoDescricaoInput.value = descricao;
+
+    popularDropdownCategorias().then(() => { // Garante que as opções carreguem antes de selecionar
+        produtoCategoriaSelect.value = id_categoria;
+    });
     
     formProdutoTitulo.textContent = 'Editar Produto';
     containerQuantidadeInicial.style.display = 'none'; // ESCONDE o campo de quantidade
@@ -323,37 +328,108 @@ btnFecharModal.addEventListener('click', () => {
 });
 
 movimentacaoForm.addEventListener('submit', async (e) => {
+
     e.preventDefault();
     
-    const { auth } = await client;
-    const { data: { user } } = await auth.getUser(); // Pega o usuário logado
-
-    if (!user) {
-        alert('Usuário não autenticado. Faça login novamente.');
-        return;
-    }
-
-    // Coleta os dados do formulário do modal
     const produtoId = document.getElementById('mov-produto-id').value;
     const tipo = document.getElementById('mov-tipo').value;
     const quantidade = parseInt(document.getElementById('mov-quantidade').value);
-    const justificativa = document.getElementById('mov-justificativa').value;
+    const observacao = document.getElementById('mov-justificativa').value; 
 
-    const { error } = await client
-        .from('movimentacao')
-        .insert([{ 
-            id_produto: produtoId,
-            id_usuario: user.id, // ID do usuário logado
-            tipo: tipo,
-            quantidade: quantidade,
-            observacao: justificativa
-        }]);
+    // Chama a função do supabase RPC
+    const { error } = await client.rpc('registrar_movimentacao_e_atualizar_estoque', {
+        produto_id_param: produtoId,
+        quantidade_param: quantidade,
+        tipo_param: tipo,
+        observacao_param: observacao
+    });
 
     if (error) {
         alert('Erro ao registrar movimentação: ' + error.message);
+        console.error('Erro na chamada RPC:', error);
     } else {
         movimentacaoForm.reset();
         modalMovimentacao.close();
-        carregarProdutos(); // Recarrega a tabela principal para atualizar o estoque
+        carregarProdutos();
     }
 });
+
+// CATEGORIA
+const categoriasSection = document.getElementById('categorias-section');
+const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
+const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
+const categoriaForm = document.getElementById('categoria-form');
+const categoriasTbody = document.getElementById('categorias-tbody');
+
+// Navegação
+btnGerenciarCategorias.addEventListener('click', () => {
+    showSection(categoriasSection);
+    carregarCategorias();
+});
+btnVoltarCategorias.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(mainSection);
+});
+
+// Carregar e exibir categorias
+async function carregarCategorias() {
+    const { data, error } = await client.from('categorias').select('*').order('nome');
+    if (error) {
+        console.error("Erro ao carregar categorias:", error);
+        return;
+    }
+    categoriasTbody.innerHTML = '';
+    data.forEach(cat => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${cat.nome}</td>
+            <td><button class="secondary outline" onclick="deletarCategoria(${cat.id})">Excluir</button></td>
+        `;
+        categoriasTbody.appendChild(tr);
+    });
+}
+
+// Salvar nova categoria
+categoriaForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('categoria-nome').value;
+    const { error } = await client.from('categoria').insert([{ nome: nome }]);
+    if (error) {
+        alert("Erro ao salvar categoria: " + error.message);
+    } else {
+        categoriaForm.reset();
+        carregarCategorias();
+    }
+});
+
+// Deletar categoria
+async function deletarCategoria(id) {
+    if (!confirm("Tem certeza? Excluir uma categoria pode afetar produtos existentes.")) {
+        return;
+    }
+    const { error } = await client.from('categoria').delete().eq('id', id);
+    if (error) {
+        alert("Erro ao excluir categoria: " + error.message);
+    } else {
+        carregarCategorias();
+    }
+}
+
+//Selecionar a Categoria ao adicionar/editar produto.
+const produtoCategoriaSelect = document.getElementById('produto-categoria-select');
+
+async function popularDropdownCategorias() {
+    const { data, error } = await client.from('categorias').select('*').order('nome');
+    if (error) {
+        console.error("Erro ao buscar categorias para o dropdown:", error);
+        return;
+    }
+    // Limpa opções antigas (exceto a primeira "Selecione...")
+    produtoCategoriaSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
+    data.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = cat.nome;
+        produtoCategoriaSelect.appendChild(option);
+    });
+}
