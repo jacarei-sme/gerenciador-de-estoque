@@ -1,7 +1,3 @@
-Com certeza! Com base nos arquivos do seu projeto, preparei uma sugestão de README.md mais completo e informativo para o seu repositório no GitHub. Ele foi pensado para explicar o que o projeto faz, quais tecnologias utiliza e como ele funciona.
-
-Aqui está a sugestão:
-
 Sistema de Controle de Estoque - DTI/SME
 
 Sobre o Projeto
