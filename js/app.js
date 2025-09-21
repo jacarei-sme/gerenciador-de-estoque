@@ -3,83 +3,61 @@ const supabaseUrl = "https://jhxlbkjulksfrcuwfhcb.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpoeGxia2p1bGtzZnJjdXdmaGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3OTczNjQsImV4cCI6MjA3MzM3MzM2NH0.d6KOZxc1iJaI_wloMpa-xura80Fv-YXKijG2wuz5wZg";
 const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-// SELETORES DE ELEMENTOS - SEÇÕES PRINCIPAIS
-const loginSection = document.getElementById('login-section');
-const mainSection = document.getElementById('main-section');
-const formProdutoSection = document.getElementById('form-produto-section');
-const categoriasSection = document.getElementById('categorias-section');
-const relatorioSection = document.getElementById('relatorio-section');
-
 // LOGIN
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('mensagem');
 
-// BOTÃO DA TELA INICIAL
+// SELETORES DE ELEMENTOS - SEÇÕES PRINCIPAIS
+const loginSection = document.getElementById('login-section');
+const mainSection = document.getElementById('main-section');
+const addProdutoSection = document.getElementById('add-produto-section');
+const editProdutoSection = document.getElementById('edit-produto-section');
+const categoriasSection = document.getElementById('categorias-section');
+const relatorioSection = document.getElementById('relatorio-section');
+
+//MAIN
 const btnUltimasMovimentacoes = document.getElementById('btn-ultimas-movimentacoes');
-const btnVoltar = document.getElementById('btn-voltar-main');
 const btnLogout = document.getElementById('btn-logout');
+const produtosTbody = document.getElementById('produtos-tbody');
 
-// SELETORES ADICIONAIS PARA O CRUD 
-const produtoForm = document.getElementById('produto-form');
+//MOVIMENTAÇÃO
 const movimentacaoForm = document.getElementById('movimentacao-form');
-const formProdutoTitulo = document.getElementById('form-produto-titulo');
-
-const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
-const btnVoltarForm = document.getElementById('btn-voltar-form');
-const btnVoltarCrud = document.getElementById('btn-voltar-crud');
-const btnCancelarEdicao = document.getElementById('btn-cancelar-edicao');
+const modalMovimentacao = document.getElementById('modal-movimentacao');
+const modalTitulo = document.getElementById('modal-titulo');
 const btnFecharModal = document.getElementById('btn-fechar-modal');
+
+//ADICIONAR PRODUTOS
+const addProdutoForm = document.getElementById('add-produto-form');
+const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
+const btnVoltarAddForm = document.getElementById('btn-voltar-add-form');
+
+//EDITAR PRODUTO
+const editProdutoForm = document.getElementById('edit-produto-form');
+const btnVoltarEditForm = document.getElementById('btn-voltar-edit-form');
+
+//CATEGORIAS
+const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
+const categoriaForm = document.getElementById('categoria-form');
+const categoriasTbody = document.getElementById('categorias-tbody');
+const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
+
+//RELATÓRIO 
 const relatorioTbody = document.getElementById('relatorio-tbody');
 const relatorioTitulo = document.getElementById('relatorio-titulo');
 const btnRelatorioCompleto = document.getElementById('btn-relatorio-completo');
 const btnVoltarRelatorio = document.getElementById('btn-voltar-relatorio');
 
-const produtosTbody = document.getElementById('produtos-tbody');
-const produtoIdInput = document.getElementById('produto-id');
-const produtoNomeInput = document.getElementById('produto-nome');
-const produtoDescricaoInput = document.getElementById('produto-descricao');
-
-const modalMovimentacao = document.getElementById('modal-movimentacao');
-const modalTitulo = document.getElementById('modal-titulo');
-
-const containerQuantidadeInicial = document.getElementById('container-quantidade-inicial');
-
 // FUNÇÕES DE CONTROLE DE VISIBILIDADE
 function showSection(sectionToShow) {
     loginSection.classList.add('hidden');
     mainSection.classList.add('hidden');
-    formProdutoSection.classList.add('hidden');
+    addProdutoSection.classList.add('hidden');
+    editProdutoSection.classList.add('hidden');
+    categoriasSection.classList.add('hidden');
     relatorioSection.classList.add('hidden');
-    categoriasSection.classList.add('hidden');    
+
     sectionToShow.classList.remove('hidden');
 }
-
-// AUTENTICAÇÃO
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.textContent = "Conectando...";
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { data, error } = await client.auth.signInWithPassword({ email, password });
-
-    if(error){
-        msg.textContent = "Usuário ou Senha incorretos";
-        //msg.textoContent = error.message; Modificado o erro padrão! 
-    }
-    else {
-        localStorage.setItem("usuarioLogado", JSON.stringify(data.user));
-        msg.textContent = ""; //Evita que o texto "Conectando" após usar o botão "Sair"
-        checkAuth();
-    }
-});
-
-btnLogout.addEventListener('click', async () => {
-    await client.auth.signOut();
-    localStorage.removeItem('usuarioLogado');
-    checkAuth();
-});
 
 //MOVIMENTAÇÃO
 btnUltimasMovimentacoes.addEventListener('click', () => {
@@ -99,40 +77,30 @@ btnVoltarRelatorio.addEventListener('click', (e) => {
     showSection(mainSection);
 });
 
-// INICIALIZAÇÃO / LOGIN
-function checkAuth() {
-    const user = localStorage.getItem('usuarioLogado');
-    if (user) {
-        showSection(mainSection);
-        carregarProdutos();
-    } else {
-        showSection(loginSection);
-    }
+btnAdicionarProduto.addEventListener('click', () => {
+    addProdutoForm.reset(); 
+    popularDropdownCategorias('add-produto-categoria-select');
+    showSection(addProdutoSection);
+});
+
+btnVoltarAddForm.addEventListener('click', (e) => { 
+    e.preventDefault(); showSection(mainSection); 
+});
+
+function prepararEdicao(id, nome, descricao, id_categoria) {
+    document.getElementById('edit-produto-id').value = id;
+    document.getElementById('edit-produto-nome').value = nome;
+    document.getElementById('edit-produto-descricao').value = descricao;
+    
+    popularDropdownCategorias('edit-produto-categoria-select').then(() => {
+        document.getElementById('edit-produto-categoria-select').value = id_categoria;
+    });
+    
+    showSection(editProdutoSection);
 }
 
-// Verifica se o usuário já esta autenticado
-document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-});
-
-btnAdicionarProduto.addEventListener('click', () => {
-    produtoForm.reset(); 
-    document.getElementById('produto-quantidade-inicial').value = '0'; //Reseta o valor do formumário para 0
-    formProdutoTitulo.textContent = 'Adicionar Novo Produto';
-    containerQuantidadeInicial.style.display = 'block';
-    popularDropdownCategorias();
-    showSection(formProdutoSection);
-});
-
-btnVoltarForm.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection(mainSection);
-});
-
-btnCancelarEdicao.addEventListener('click', () => {
-    produtoForm.reset();
-    produtoIdInput.value = '';
-    showSection(mainSection);
+btnVoltarEditForm.addEventListener('click', (e) => { 
+    e.preventDefault(); showSection(mainSection); 
 });
 
 async function carregarRelatorio(limite = null) {
@@ -176,11 +144,8 @@ async function carregarRelatorio(limite = null) {
     });
 }
 
-// CRU -- Create Read Update 
-
-// READ: Carregar e exibir todos os produtos (REVER carregarProdutos())
+//PRODUTOS
 async function carregarProdutos() {
-    // ETAPA A: Calcular o estoque atual a partir das movimentações
     let { data: movimentacoes, error: movError } = await client
         .from('movimentacao')
         .select('id_produto, tipo, quantidade');
@@ -190,19 +155,19 @@ async function carregarProdutos() {
         return;
     }
     
-    const estoque = {}; // Ex: { produtoId_1: 10, produtoId_2: 5 }
+    const estoque = {};
     movimentacoes.forEach(mov => {
         if (!estoque[mov.id_produto]) {
             estoque[mov.id_produto] = 0;
         }
         if (mov.tipo === 'ENTRADA') {
             estoque[mov.id_produto] += mov.quantidade;
-        } else { // 'SAÍDA'
+        } else { // == 'SAIDA'
             estoque[mov.id_produto] -= mov.quantidade;
         }
     });
 
-    // ETAPA B: Buscar os produtos e montar a tabela
+
     const { data: produtos, error } = await client
         .from('produto')
         .select('*')
@@ -215,10 +180,9 @@ async function carregarProdutos() {
 
     produtosTbody.innerHTML = '';
     produtos.forEach(produto => {
-        //const quantidadeAtual = estoque[produto.quantidade] || 0; // Pega a quantidade ou 0 se não houver
+
         const tr = document.createElement('tr');
 
-        // Note a nova coluna <td> para quantidade e os novos botões
         tr.innerHTML = `
             <td>${produto.nome}</td>
             <td>${produto.descricao}</td>
@@ -231,48 +195,33 @@ async function carregarProdutos() {
     });
 }
 
-// CREATE e UPDATE
-produtoForm.addEventListener('submit', async (e) => {
+addProdutoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const nome = document.getElementById('add-produto-nome').value;
+    const descricao = document.getElementById('add-produto-descricao').value;
+    const id_categoria = document.getElementById('add-produto-categoria-select').value;
+    const quantidadeInicial = parseInt(document.getElementById('add-produto-quantidade-inicial').value) || 0;
 
-    const id = document.getElementById('produto-id').value;
-    const nome = document.getElementById('produto-nome').value;
-    const descricao = document.getElementById('produto-descricao').value;
-    const quantidade = parseInt(document.getElementById('produto-quantidade-inicial').value);
-    const id_categoria = produtoCategoriaSelect.value;
-
-    //ATUALIZAÇÃO DE PRODUTO
-    if (id) {
-        const { error } = await client
-            .from('produto')
-            .update({ nome, descricao, quantidade, id_categoria })
-            .eq('id', id);
-
-        if (error) {
-            alert('Erro ao atualizar o produto: ' + error.message);
-        } else {
-            showSection(mainSection);
-            carregarProdutos();
-        }
-        return;
-    }
-
-    //NOVO PRODUTO
     const { data: novoProduto, error: produtoError } = await client
         .from('produto')
-        .insert([{ nome, descricao, quantidade, id_categoria }])
+        .insert([{ 
+            nome: nome, 
+            descricao: descricao, 
+            id_categoria: id_categoria,
+            quantidade: quantidadeInicial
+        }])
         .select();
 
     if (produtoError) {
         alert('Erro ao cadastrar o produto: ' + produtoError.message);
+        console.error("Erro ao inserir produto:", produtoError);
         return;
     }
 
-    //Se a quantidade inicial for maior que 0, cria a primeira movimentação
-    if (quantidade > 0) {
+    if (quantidadeInicial > 0) {
         const { auth } = await client;
         const { data: { user } } = await auth.getUser();
-        const novoProdutoId = novoProduto[0].id; // Pega o ID do produto que acabamos de criar
+        const novoProdutoId = novoProduto[0].id;
 
         const { error: movError } = await client
             .from('movimentacao')
@@ -280,36 +229,40 @@ produtoForm.addEventListener('submit', async (e) => {
                 id_produto: novoProdutoId,
                 id_usuario: user.id,
                 tipo: 'ENTRADA',
-                quantidade: quantidade,
+                quantidade: quantidadeInicial,
                 observacao: 'Carga inicial de estoque'
             }]);
         
         if (movError) {
-            alert('Produto cadastrado, mas houve um erro ao registrar a quantidade inicial: ' + movError.message);
+            alert('Produto cadastrado com sucesso, mas houve um erro ao registrar a movimentação inicial no histórico.');
+            console.error("Erro ao inserir movimentação inicial:", movError);
         }
     }
 
-    //Limpa e volta a tela principal
-    produtoForm.reset();
     showSection(mainSection);
     carregarProdutos();
 });
 
-// Função para preparar o formulário para edição
-function prepararEdicao(id, nome, descricao, id_categoria) {
-    produtoIdInput.value = id;
-    produtoNomeInput.value = nome;
-    produtoDescricaoInput.value = descricao;
+editProdutoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('edit-produto-id').value;
+    const nome = document.getElementById('edit-produto-nome').value;
+    const descricao = document.getElementById('edit-produto-descricao').value;
+    const id_categoria = document.getElementById('edit-produto-categoria-select').value;
 
-    popularDropdownCategorias().then(() => { // Garante que as opções carreguem antes de selecionar
-        produtoCategoriaSelect.value = id_categoria;
-    });
-    
-    formProdutoTitulo.textContent = 'Editar Produto';
-    containerQuantidadeInicial.style.display = 'none'; // ESCONDE o campo de quantidade
-    showSection(formProdutoSection);
-}
+    const { error } = await client.from('produto')
+        .update({ nome, descricao, id_categoria })
+        .eq('id', id);
 
+    if (error) {
+        alert('Erro ao atualizar o produto: ' + error.message);
+    } else {
+        showSection(mainSection);
+        carregarProdutos();
+    }
+});
+
+//MOVIMENTAÇÃO
 function abrirModalMovimentacao(id, nome, tipo) {
     modalTitulo.textContent = `Registrar ${tipo === 'ENTRADA' ? 'Entrada' : 'Retirada'} de: ${nome}`;
     
@@ -353,23 +306,16 @@ movimentacaoForm.addEventListener('submit', async (e) => {
 });
 
 // CATEGORIA
-const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
-const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
-const categoriaForm = document.getElementById('categoria-form');
-const categoriasTbody = document.getElementById('categorias-tbody');
-
-// Navegação
 btnGerenciarCategorias.addEventListener('click', () => {
     showSection(categoriasSection);
     carregarCategorias();
 });
+
 btnVoltarCategorias.addEventListener('click', (e) => {
     e.preventDefault();
     showSection(mainSection);
-    //FALTA ZERAR AS CONSTANTES E TAMBÉM FECHAR A SEÇÃO
 });
 
-// Carregar e exibir categorias
 async function carregarCategorias() {
     const { data, error } = await client.from('categorias').select('*').order('nome');
     if (error) {
@@ -387,20 +333,6 @@ async function carregarCategorias() {
     });
 }
 
-// Salvar nova categoria
-categoriaForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nomeCategoria = document.getElementById('categoria-nome').value;
-    const { error } = await client.from('categoria').insert([{ nome: nomeCategoria }]);
-    if (error) {
-        alert("Erro ao salvar categoria: " + error.message);
-    } else {
-        categoriaForm.reset();
-        carregarCategorias();
-    }
-});
-
-// Deletar categoria
 async function deletarCategoria(id) {
     if (!confirm("Tem certeza? Excluir uma categoria pode afetar produtos existentes.")) {
         return;
@@ -413,21 +345,86 @@ async function deletarCategoria(id) {
     }
 }
 
-//Selecionar a Categoria ao adicionar/editar produto.
-const produtoCategoriaSelect = document.getElementById('produto-categoria-select');
+async function popularDropdownCategorias(idDoSelect) {
+    // 1. Encontra o elemento <select> específico usando o ID que foi passado como argumento
+    const selectElement = document.getElementById(idDoSelect);
+    if (!selectElement) {
+        console.error(`Dropdown com id '${idDoSelect}' não encontrado.`);
+        return;
+    }
 
-async function popularDropdownCategorias() {
-    const { data, error } = await client.from('categorias').select('*').order('nome');
+    // 2. Busca todas as categorias no Supabase, ordenadas por nome
+    const { data, error } = await client
+        .from('categorias')
+        .select('*')
+        .order('nome');
+
     if (error) {
         console.error("Erro ao buscar categorias para o dropdown:", error);
         return;
     }
-    // Limpa opções antigas (exceto a primeira "Selecione...")
-    produtoCategoriaSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
+
+    // 3. Limpa as opções antigas, mantendo apenas a primeira ("Selecione...")
+    selectElement.innerHTML = '<option value="">Selecione uma categoria...</option>';
+
+    // 4. Cria e adiciona uma nova <option> para cada categoria encontrada
     data.forEach(cat => {
         const option = document.createElement('option');
         option.value = cat.id;
         option.textContent = cat.nome;
-        produtoCategoriaSelect.appendChild(option);
+        selectElement.appendChild(option);
     });
 }
+
+categoriaForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nomeCategoria = document.getElementById('categoria-nome').value;
+    const { error } = await client.from('categoria').insert([{ nome: nomeCategoria }]);
+    if (error) {
+        alert("Erro ao salvar categoria: " + error.message);
+    } else {
+        categoriaForm.reset();
+        carregarCategorias();
+    }
+});
+
+// AUTENTICAÇÃO
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.textContent = "Conectando...";
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+    if(error){
+        msg.textContent = "Usuário ou Senha incorretos";
+        //msg.textoContent = error.message; Modificado o erro padrão! 
+    }
+    else {
+        localStorage.setItem("usuarioLogado", JSON.stringify(data.user));
+        msg.textContent = ""; //Evita que o texto "Conectando" após usar o botão "Sair"
+        checkAuth();
+    }
+});
+
+btnLogout.addEventListener('click', async () => {
+    await client.auth.signOut();
+    localStorage.removeItem('usuarioLogado');
+    checkAuth();
+});
+
+function checkAuth() {
+    const user = localStorage.getItem('usuarioLogado');
+    if (user) {
+        showSection(mainSection);
+        carregarProdutos();
+    } else {
+        showSection(loginSection);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+});

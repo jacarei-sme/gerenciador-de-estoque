@@ -2,7 +2,7 @@
 <html lang="pt-BR">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Controle de Estoque DTI-SME</title>
         <link rel="stylesheet" href="css/pico.min.css"/>
         <style>
@@ -30,7 +30,7 @@
             </main>
         </div>
         <!-- MAIN -->
-        <div id="main-section" class="container hidden" style="max-width: auto; padding-top: 1%;">
+        <div id="main-section" class="container hidden" style="max-width: 80%; padding-top: 1%;">
             <header>
                 <h1>Painel de Controle</h1>
                 <p>Visão geral do seu estoque.</p>
@@ -42,9 +42,7 @@
                 <button id="btn-relatorio-completo" class="secondary">Ver Relatório Completo</button>
                 <button id="btn-logout" class="secondary outline">Sair</button>
             </div>
-
             <hr>
-
             <h3>Produtos em Estoque</h3>
             <figure>
                 <table role="grid" id="produtos-table">
@@ -83,31 +81,43 @@
             </article>
         </dialog>
         <!--- PRODUTOS-->
-        <div id="form-produto-section" class="container hidden" style="max-width: 40em; padding-top: 1%;">
+        <div id="add-produto-section" class="container hidden" style="max-width: 80%; padding-top: 1%;">
             <header>
-                <a href="#" id="btn-voltar-form">← Voltar</a>
-                <h2 id="form-produto-titulo">Adicionar Novo Produto</h2> 
+                <a href="#" id="btn-voltar-add-form">← Voltar</a>
+                <h2>Adicionar Novo Produto</h2> 
             </header>
-            <form id="produto-form">
-                <input type="hidden" id="produto-id">
+            <form id="add-produto-form"> 
                 <div class="grid">
-                    <input type="text" id="produto-nome" placeholder="Nome do Produto" required>
-                    
-                    <select id="produto-categoria-select" required>
+                    <input type="text" id="add-produto-nome" placeholder="Nome do Produto" required>
+                    <select id="add-produto-categoria-select" required>
                         <option value="">Selecione uma categoria...</option>
                     </select>
                 </div>
-                <div id="container-quantidade-inicial">
-                    <label for="produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
-                    <input type="number" id="produto-quantidade-inicial" min="0" value="0" required>
+                <div>
+                    <label for="add-produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
+                    <input type="number" id="add-produto-quantidade-inicial" min="0" value="0" placeholder="Quantidade do produto" required>
                 </div>
-                <textarea id="produto-descricao" placeholder="Descrição"></textarea>
+                <textarea id="add-produto-descricao" placeholder="Descrição"></textarea>
                 <button type="submit">Salvar Produto</button>
-                <button type="reset" class="secondary outline" id="btn-cancelar-edicao">Cancelar</button>
+            </form>
+        </div>
+        <div id="edit-produto-section" class="container hidden" style="max-width: 80%; padding-top: 1%;">
+            <header>
+                <a href="#" id="btn-voltar-edit-form">← Voltar</a>
+                <h2>Editar Produto</h2> 
+            </header>
+            <form id="edit-produto-form"> <input type="hidden" id="edit-produto-id"> <div class="grid">
+                    <input type="text" id="edit-produto-nome" placeholder="Nome do Produto" required>
+                    <select id="edit-produto-categoria-select" required>
+                        <option value="">Selecione uma categoria...</option>
+                    </select>
+                </div>
+                <textarea id="edit-produto-descricao" placeholder="Descrição"></textarea>
+                <button type="submit">Salvar Alterações</button>
             </form>
         </div>
         <!-- CATEGORIAS -->
-        <div id="categorias-section" class="container hidden" style="max-width: 40em; padding-top: 1%;">
+        <div id="categorias-section" class="container hidden" style="max-width: 80%; padding-top: 1%;">
             <header>
                 <a href="#" id="btn-voltar-categorias">← Voltar</a>
                 <h2>Gerenciar Categorias</h2>
@@ -128,7 +138,7 @@
             </table>
         </div>
         <!-- RELATÓRIO -->
-        <div id="relatorio-section" class="container hidden" style="max-width: 40em; padding-top: 1%;">
+        <div id="relatorio-section" class="container hidden" style="max-width: 80%; padding-top: 1%;">
             <header>
                 <a href="#" id="btn-voltar-relatorio">← Voltar</a>
                 <h2 id="relatorio-titulo">Relatório de Movimentações</h2>
