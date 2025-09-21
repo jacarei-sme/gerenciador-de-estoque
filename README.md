@@ -15,7 +15,7 @@ O sistema foi construído para ser uma ferramenta prática e funcional para a ge
     * **Criação:** Adicione novos produtos ao estoque com nome, descrição e quantidade inicial.
     * **Visualização:** Liste todos os produtos em uma tabela clara, com o estoque atual visível.
     * **Atualização:** Edite as informações de produtos já cadastrados.
-    * **(Não implementado no front-end):** A exclusão de produtos pode ser implementada futuramente.
+    * **Exclusão:** Ainda não implementada.
 * **📈 Controle de Movimentação:**
     * Registre **entradas** de novos itens no estoque.
     * Registre **retiradas (saídas)** de material, com um campo opcional para justificativa.
