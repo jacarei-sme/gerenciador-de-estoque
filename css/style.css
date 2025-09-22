@@ -1,0 +1,36 @@
+/*CSS para algumas modificações do HTML*/
+.hidden {
+display: none;
+}
+.entrada { color: var(--pico-color-green-500); font-weight: bold; }
+.saida { color: var(--pico-color-red-500); font-weight: bold; }
+
+#login-section {
+    max-width: 20em; 
+    padding-top: 10%;
+}
+
+#main-section {
+    max-width: 80%; 
+    padding-top: 1%;
+}
+
+#add-produto-section {
+    max-width: 80%; 
+    padding-top: 1%;
+}
+
+#edit-produto-section {
+    max-width: 80%; 
+    padding-top: 1%;
+}
+
+#categorias-section {
+    max-width: 80%; 
+    padding-top: 1%;
+}
+
+#relatorio-section {
+    max-width: 80%; 
+    padding-top: 1%;
+}
