@@ -1,0 +1,6 @@
+/*CSS para algumas modificações do HTML*/
+.hidden {
+display: none;
+}
+.entrada { color: var(--pico-color-green-500); font-weight: bold; }
+.saida { color: var(--pico-color-red-500); font-weight: bold; }
