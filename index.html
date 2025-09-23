@@ -7,9 +7,16 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <body style="display: grid; place-items: center; ">
+    <body style="display: grid; place-items: center;">
+            <nav id="nav-section">
+                <button id="btn-ultimas-movimentacoes">Ver Últimas Movimentações</button>
+                <button id="btn-adicionar-produto">Adicionar Novo Produto</button>
+                <button id="btn-gerenciar-categorias" class="secondary">Gerenciar Categorias</button>
+                <button id="btn-relatorio-completo" class="secondary">Ver Relatório Completo</button>
+                <button id="btn-logout" class="secondary outline">Sair</button>
+            </nav>
         <!--LOGIN-->
-        <div id="login-section" class="container">
+        <section id="login-section" class="container">
             <header>
                 <h2>Estoque DTI-SME</h2>
             </header>
@@ -21,23 +28,16 @@
                 </form>
                 <p id="mensagem"></p>
             </main>
-            <div>
+            <section>
                 <a href="https://educajacarei.com.br/">Secretaria de Educação de jacareí</a>
-            </div>
-        </div>
+            </section>
+        </section>
         <!-- MAIN -->
-        <div id="main-section" class="container hidden">
+        <section id="main-section" class="container hidden">
             <header>
                 <h1>Painel de Controle</h1>
                 <p>Visão geral do seu estoque.</p>
             </header>
-            <div class="grid">
-                <button id="btn-ultimas-movimentacoes">Ver Últimas Movimentações</button>
-                <button id="btn-adicionar-produto">Adicionar Novo Produto</button>
-                <button id="btn-gerenciar-categorias" class="secondary">Gerenciar Categorias</button>
-                <button id="btn-relatorio-completo" class="secondary">Ver Relatório Completo</button>
-                <button id="btn-logout" class="secondary outline">Sair</button>
-            </div>
             <hr>
             <h3>Produtos em Estoque</h3>
             <figure>
@@ -52,7 +52,7 @@
                     </tbody>
                 </table>
             </figure>
-        </div>
+        </section>
         <!-- MOVIMENTAÇÃO -->
         <dialog id="modal-movimentacao">
             <article>
@@ -77,43 +77,43 @@
             </article>
         </dialog>
         <!--- PRODUTOS-->
-        <div id="add-produto-section" class="container hidden">
+        <section id="add-produto-section" class="container hidden">
             <header>
                 <a href="#" id="btn-voltar-add-form">← Voltar</a>
                 <h2>Adicionar Novo Produto</h2> 
             </header>
             <form id="add-produto-form"> 
-                <div class="grid">
+                <section class="grid">
                     <input type="text" id="add-produto-nome" placeholder="Nome do Produto" required>
                     <select id="add-produto-categoria-select" required>
                         <option value="">Selecione uma categoria...</option>
                     </select>
-                </div>
-                <div>
+                </section>
+                <section>
                     <label for="add-produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
                     <input type="number" id="add-produto-quantidade-inicial" min="0" value="0" placeholder="Quantidade do produto" required>
-                </div>
+                </section>
                 <textarea id="add-produto-descricao" placeholder="Descrição"></textarea>
                 <button type="submit">Salvar Produto</button>
             </form>
-        </div>
-        <div id="edit-produto-section" class="container hidden">
+        </section>
+        <section id="edit-produto-section" class="container hidden">
             <header>
                 <a href="#" id="btn-voltar-edit-form">← Voltar</a>
                 <h2>Editar Produto</h2> 
             </header>
-            <form id="edit-produto-form"> <input type="hidden" id="edit-produto-id"> <div class="grid">
+            <form id="edit-produto-form"> <input type="hidden" id="edit-produto-id"> <section class="grid">
                     <input type="text" id="edit-produto-nome" placeholder="Nome do Produto" required>
                     <select id="edit-produto-categoria-select" required>
                         <option value="">Selecione uma categoria...</option>
                     </select>
-                </div>
+                </section>
                 <textarea id="edit-produto-descricao" placeholder="Descrição"></textarea>
                 <button type="submit">Salvar Alterações</button>
             </form>
-        </div>
+        </section>
         <!-- CATEGORIAS -->
-        <div id="categorias-section" class="container hidden">
+        <section id="categorias-section" class="container hidden">
             <header>
                 <a href="#" id="btn-voltar-categorias">← Voltar</a>
                 <h2>Gerenciar Categorias</h2>
@@ -132,9 +132,9 @@
                 <tbody id="categorias-tbody">
                     </tbody>
             </table>
-        </div>
+        </section>
         <!-- RELATÓRIO -->
-        <div id="relatorio-section" class="container hidden">
+        <section id="relatorio-section" class="container hidden">
             <header>
                 <a href="#" id="btn-voltar-relatorio">← Voltar</a>
                 <h2 id="relatorio-titulo">Relatório de Movimentações</h2>
@@ -155,7 +155,7 @@
                         </tbody>
                 </table>
             </figure>
-        </div>
+        </section>
         <!--SCRIPT DO SUPABASE-->
         <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
         <!--SCRIPT PRÓPRIO-->
