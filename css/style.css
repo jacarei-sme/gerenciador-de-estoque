@@ -10,30 +10,33 @@ display: none;
 }
 
 #main-section {
-    max-width: 80%; 
     padding-top: 1%;
 }
 
 #add-produto-section {
-    max-width: 80%; 
     padding-top: 1%;
 }
 
 #edit-produto-section {
-    max-width: 80%; 
     padding-top: 1%;
 }
 
 #categorias-section {
-    max-width: 80%; 
     padding-top: 1%;
 }
 
 #relatorio-section {
-    max-width: 80%; 
     padding-top: 1%;
 }
 
 #produtos-table{
     overflow: auto;
+}
+
+#nav-section{
+    margin: 0.5%;
+}
+
+.nav{
+    margin: 0.5%;
 }

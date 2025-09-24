@@ -7,6 +7,8 @@ const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('mensagem');
 
+const navSection = document.getElementById('nav-section');
+
 // AUTENTICAÇÃO
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -24,6 +26,7 @@ loginForm.addEventListener('submit', async (e) => {
     else {
         localStorage.setItem("usuarioLogado", JSON.stringify(data.user));
         msg.textContent = ""; //Evita que o texto "Conectando" após usar o botão "Sair"
+        navSection.classList.remove('hidden');
         checkAuth();
     }
 });
@@ -31,6 +34,7 @@ loginForm.addEventListener('submit', async (e) => {
 btnLogout.addEventListener('click', async () => {
     await client.auth.signOut();
     localStorage.removeItem('usuarioLogado');
+    navSection.classList.add('hidden');
     checkAuth();
 });
 
@@ -38,9 +42,11 @@ function checkAuth() {
     const user = localStorage.getItem('usuarioLogado');
     if (user) {
         showSection(mainSection);
+        navSection.classList.remove('hidden');
         carregarProdutos();
     } else {
         showSection(loginSection);
+        navSection.classList.add('hidden');
     }
 }
 
