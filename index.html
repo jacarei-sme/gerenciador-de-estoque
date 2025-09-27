@@ -86,12 +86,9 @@
             </section>
             <!-- MOVIMENTAÇÃO -->
             <dialog id="modal-movimentacao">
-                <div>
-                    <!--button aria-label="Close" rel="prev" id="btn-fechar-modal"></button-->
-                    <a href="#" id="btn-fechar-modal">Fechar</a>
-                    <h3 id="modal-titulo">Registrar Movimentação</h3>
-                </div>
                 <article>
+                    <button aria-label="Close" rel="prev" id="btn-fechar-modal">Fechar</button>
+                    <h3 id="modal-titulo">Registrar Movimentação</h3>
                     <form id="movimentacao-form">
                         <input type="hidden" id="mov-produto-id">
                         <input type="hidden" id="mov-tipo">
@@ -109,11 +106,17 @@
                 </article>
             </dialog>
             <!--- PRODUTOS-->
-            <section id="produtos-section" class="container hidden">
-                <h2>Produtos em Estoque</h2>
-                <div>
+            <section id="produtos-section" class="container hidden">                
+                <div class="container">
+                    <h2>Produtos em Estoque</h2>
                     <button id="btn-adicionar-produto">Novo Produto</button>
                 </div>
+                <form class="grid" id="filtros-form">
+                    <input type="search" id="input-busca-produto" placeholder="Buscar produto por nome...">
+                    <select id="filtro-categoria-select">
+                        <option value="todos">Todas as categorias</option>
+                        </select>
+                </form>
                 <figure>
                     <table role="grid" id="produtos-table">
                         <thead>

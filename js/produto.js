@@ -1,16 +1,20 @@
-//ADICIONAR PRODUTOS
 const btnProdutosSection = document.getElementById('btn-produtos');
-const addProdutoForm = document.getElementById('add-produto-form');
-const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
-const btnVoltarAddForm = document.getElementById('btn-voltar-add-form');
 const produtosTbody = document.getElementById('produtos-tbody');
-
-//EDITAR PRODUTO
+//ADICIONAR OS PRODUTOS
+const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
+const addProdutoForm = document.getElementById('add-produto-form');
+const btnVoltarAddForm = document.getElementById('btn-voltar-add-form');
+//EDITAR OS PRODUTOS
 const editProdutoForm = document.getElementById('edit-produto-form');
 const btnVoltarEditForm = document.getElementById('btn-voltar-edit-form');
+//FILTRAR OS PRODUTOS
+const inputBuscaProduto = document.getElementById('input-busca-produto');
+const filtroCategoriaSelect = document.getElementById('filtro-categoria-select');
+let listaCompletaProdutos = [];
+inputBuscaProduto.addEventListener('keyup', renderizarTabelaProdutos);
+filtroCategoriaSelect.addEventListener('change', renderizarTabelaProdutos);
 
-//PRODUTOS
-async function carregarProdutos() {
+/*async function carregarProdutos() {
     let { data: movimentacoes, error: movError } = await client
         .from('movimentacao')
         .select('id_produto, tipo, quantidade');
@@ -58,7 +62,91 @@ async function carregarProdutos() {
         `;
         produtosTbody.appendChild(tr);
     });
+}*/
+
+async function carregarListaCompletaProdutos() {
+    const { data: produtos, error } = await client
+        .from('produto')
+        .select(`
+            id, nome, descricao, quantidade, id_categoria,
+            categorias ( nome )
+        `)
+        .order('nome', { ascending: true });
+
+    if (error) {
+        console.error("Erro ao carregar lista de produtos:", error);
+        listaCompletaProdutos = [];
+    } else {
+        listaCompletaProdutos = produtos;
+    }
+
+    renderizarTabelaProdutos();
 }
+
+function renderizarTabelaProdutos() {
+    const termoBusca = inputBuscaProduto.value.toLowerCase();
+    const categoriaId = filtroCategoriaSelect.value;
+
+    const produtosFiltrados = listaCompletaProdutos.filter(produto => {
+        const matchNome = produto.nome.toLowerCase().includes(termoBusca);
+        const matchCategoria = (categoriaId === 'todos') || (produto.id_categoria == categoriaId);
+        return matchNome && matchCategoria;
+    });
+
+    produtosTbody.innerHTML = '';
+
+    if (produtosFiltrados.length === 0) {
+        produtosTbody.innerHTML = '<tr><td colspan="4">Nenhum produto encontrado.</td></tr>';
+        return;
+    }
+
+    produtosFiltrados.forEach(produto => {
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+            <td>${produto.nome}</td>
+            <td>${produto.descricao}</td>
+            <td><strong>${produto.quantidade}</strong></td>
+            <td>
+                <button onclick="abrirModalMovimentacao(${produto.id}, '${produto.nome}', 'ENTRADA')">Entrada</button>
+                <button class="contrast" onclick="abrirModalMovimentacao(${produto.id}, '${produto.nome}', 'SAIDA')">Retirada</button>
+                <button class="secondary outline" onclick="prepararEdicao(${produto.id}, '${produto.nome}', '${produto.descricao}', ${produto.id_categoria})">Editar</button>
+            </td>
+        `;
+        produtosTbody.appendChild(tr);
+    });
+}
+
+function prepararEdicao(id, nome, descricao, id_categoria) {
+    document.getElementById('edit-produto-id').value = id;
+    document.getElementById('edit-produto-nome').value = nome;
+    document.getElementById('edit-produto-descricao').value = descricao;
+    
+    popularDropdownCategorias('edit-produto-categoria-select').then(() => {
+        document.getElementById('edit-produto-categoria-select').value = id_categoria;
+    });
+    
+    showSection(editProdutoSection);
+}
+
+btnProdutosSection.addEventListener('click', async (e) => {
+    e.preventDefault();
+    showSection(loadingSection);
+    
+    // Popula o dropdown de categorias para o filtro
+    await popularFiltroCategorias(); 
+    
+    // Carrega a lista completa de produtos
+    await carregarListaCompletaProdutos();
+    
+    showSection(produtosSection);
+});
+
+btnAdicionarProduto.addEventListener('click', () => {
+    addProdutoForm.reset(); 
+    popularDropdownCategorias('add-produto-categoria-select');
+    showSection(addProdutoSection);
+});
 
 addProdutoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -104,8 +192,12 @@ addProdutoForm.addEventListener('submit', async (e) => {
         }
     }
 
-    showSection(mainSection);
-    carregarProdutos();
+    showSection(produtosSection);
+});
+
+btnVoltarAddForm.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    showSection(produtosSection); 
 });
 
 editProdutoForm.addEventListener('submit', async (e) => {
@@ -122,38 +214,8 @@ editProdutoForm.addEventListener('submit', async (e) => {
     if (error) {
         alert('Erro ao atualizar o produto: ' + error.message);
     } else {
-        showSection(mainSection);
-        carregarProdutos();
+        showSection(produtosSection);
     }
-});
-
-function prepararEdicao(id, nome, descricao, id_categoria) {
-    document.getElementById('edit-produto-id').value = id;
-    document.getElementById('edit-produto-nome').value = nome;
-    document.getElementById('edit-produto-descricao').value = descricao;
-    
-    popularDropdownCategorias('edit-produto-categoria-select').then(() => {
-        document.getElementById('edit-produto-categoria-select').value = id_categoria;
-    });
-    
-    showSection(editProdutoSection);
-}
-
-btnAdicionarProduto.addEventListener('click', () => {
-    addProdutoForm.reset(); 
-    popularDropdownCategorias('add-produto-categoria-select');
-    showSection(addProdutoSection);
-});
-
-btnProdutosSection.addEventListener('click', async (e) => {
-    e.preventDefault();
-    showSection(loadingSection);
-    await carregarProdutos();
-    showSection(produtosSection);
-});
-btnVoltarAddForm.addEventListener('click', (e) => { 
-    e.preventDefault(); 
-    showSection(produtosSection); 
 });
 
 btnVoltarEditForm.addEventListener('click', (e) => { 

@@ -1,20 +1,6 @@
-//CATEGORIAS
 const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
 const categoriaForm = document.getElementById('categoria-form');
 const categoriasTbody = document.getElementById('categorias-tbody');
-//const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
-
-// CATEGORIA
-btnGerenciarCategorias.addEventListener('click', async () => {
-    showSection(loadingSection);
-    await carregarCategorias();
-    showSection(categoriasSection);
-});
-
-/*btnVoltarCategorias.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection(mainSection);
-});*/
 
 async function carregarCategorias() {
     const { data, error } = await client.from('categorias').select('*').order('nome');
@@ -75,6 +61,29 @@ async function popularDropdownCategorias(idDoSelect) {
         selectElement.appendChild(option);
     });
 }
+
+async function popularFiltroCategorias() {
+    const filtroSelect = document.getElementById('filtro-categoria-select');
+    
+    const { data, error } = await client.from('categorias').select('*').order('nome');
+    if (error) {
+        console.error("Erro ao buscar categorias para o filtro:", error);
+        return;
+    }
+
+    data.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = cat.nome;
+        filtroSelect.appendChild(option);
+    });
+}
+
+btnGerenciarCategorias.addEventListener('click', async () => {
+    showSection(loadingSection);
+    await carregarCategorias();
+    showSection(categoriasSection);
+});
 
 categoriaForm.addEventListener('submit', async (e) => {
     e.preventDefault();

@@ -86,9 +86,10 @@ table td {
 button,
 a.button {
   border-radius: 0.5rem;
-  padding: 0.6rem 1rem;
+  /*padding: 0.6rem 1rem;*/
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
+  margin: 0.7%;
 }
 
 button:hover,
