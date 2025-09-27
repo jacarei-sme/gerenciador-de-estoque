@@ -1,55 +1,55 @@
-// IINICIALIZAÇÃO DO SUPABASE
-const supabaseUrl = "https://jhxlbkjulksfrcuwfhcb.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpoeGxia2p1bGtzZnJjdXdmaGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3OTczNjQsImV4cCI6MjA3MzM3MzM2NH0.d6KOZxc1iJaI_wloMpa-xura80Fv-YXKijG2wuz5wZg";
-const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
+// Em js/auth.js
 
-// LOGIN
-const loginForm = document.getElementById('login-form');
-const msg = document.getElementById('mensagem');
+// --- RECUPERAÇÃO DE SENHA ---
 
-const navSection = document.getElementById('nav-section');
+// 1. Selecione os novos elementos do HTML
+const resetPasswordSection = document.getElementById('reset-password-section');
+const resetSuccessSection = document.getElementById('reset-success-section');
+const resetPasswordForm = document.getElementById('reset-password-form');
+const linkEsqueciSenha = document.getElementById('link-esqueci-senha');
+const linkVoltarLogin = document.getElementById('link-voltar-login');
+const linkSucessoVoltarLogin = document.getElementById('link-sucesso-voltar-login');
 
-// AUTENTICAÇÃO
-loginForm.addEventListener('submit', async (e) => {
+// 2. Adicione os Event Listeners para navegação
+linkEsqueciSenha.addEventListener('click', (e) => {
     e.preventDefault();
-    msg.textContent = "Conectando...";
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { data, error } = await client.auth.signInWithPassword({ email, password });
-
-    if(error){
-        msg.textContent = "Usuário ou Senha incorretos";
-        //msg.textoContent = error.message; Modificado o erro padrão! 
-    }
-    else {
-        localStorage.setItem("usuarioLogado", JSON.stringify(data.user));
-        msg.textContent = ""; //Evita que o texto "Conectando" após usar o botão "Sair"
-        navSection.classList.remove('hidden');
-        checkAuth();
-    }
+    showSection(resetPasswordSection); // Mostra o formulário de redefinição
 });
 
-btnLogout.addEventListener('click', async () => {
-    await client.auth.signOut();
-    localStorage.removeItem('usuarioLogado');
-    navSection.classList.add('hidden');
-    checkAuth();
+linkVoltarLogin.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(loginSection); // Volta para a tela de login
 });
 
-function checkAuth() {
-    const user = localStorage.getItem('usuarioLogado');
-    if (user) {
-        showSection(mainSection);
-        navSection.classList.remove('hidden');
-        carregarProdutos();
+linkSucessoVoltarLogin.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(loginSection); // Volta para a tela de login
+});
+
+// 3. Adicione o Event Listener para o envio do formulário
+resetPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('reset-email').value;
+    const submitButton = e.target.querySelector('button');
+    
+    // Desabilita o botão para evitar múltiplos envios
+    submitButton.setAttribute('aria-busy', 'true');
+    submitButton.textContent = 'Enviando...';
+
+    // 4. Chama a função do Supabase para enviar o e-mail
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin, // Opcional: URL para onde o usuário volta após redefinir
+    });
+
+    if (error) {
+        alert("Erro ao enviar o e-mail: " + error.message);
     } else {
-        showSection(loginSection);
-        navSection.classList.add('hidden');
+        // Mostra a tela de sucesso, independentemente se o e-mail existe ou não
+        // Isso é uma boa prática de segurança para não confirmar quais e-mails estão cadastrados.
+        showSection(resetSuccessSection);
     }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
+    // Reabilita o botão
+    submitButton.removeAttribute('aria-busy');
+    submitButton.textContent = 'Enviar Link de Redefinição';
 });

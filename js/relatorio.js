@@ -2,7 +2,7 @@
 const relatorioTbody = document.getElementById('relatorio-tbody');
 const relatorioTitulo = document.getElementById('relatorio-titulo');
 const btnRelatorioCompleto = document.getElementById('btn-relatorio-completo');
-const btnVoltarRelatorio = document.getElementById('btn-voltar-relatorio');
+//const btnVoltarRelatorio = document.getElementById('btn-voltar-relatorio');
 
 async function carregarRelatorio(limite = null) {
     let query = client
@@ -45,13 +45,14 @@ async function carregarRelatorio(limite = null) {
     });
 }
 
-btnRelatorioCompleto.addEventListener('click', () => {
+btnRelatorioCompleto.addEventListener('click', async () => {
     relatorioTitulo.textContent = 'Relatório de Movimentações';
-    carregarRelatorio();
+    showSection(loadingSection);
+    await carregarRelatorio();
     showSection(relatorioSection);
 });
 
-btnVoltarRelatorio.addEventListener('click', (e) => {
+/*btnVoltarRelatorio.addEventListener('click', (e) => {
     e.preventDefault();
     showSection(mainSection);
-});
+});*/

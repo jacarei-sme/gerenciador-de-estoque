@@ -2,18 +2,19 @@
 const btnGerenciarCategorias = document.getElementById('btn-gerenciar-categorias');
 const categoriaForm = document.getElementById('categoria-form');
 const categoriasTbody = document.getElementById('categorias-tbody');
-const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
+//const btnVoltarCategorias = document.getElementById('btn-voltar-categorias');
 
 // CATEGORIA
-btnGerenciarCategorias.addEventListener('click', () => {
+btnGerenciarCategorias.addEventListener('click', async () => {
+    showSection(loadingSection);
+    await carregarCategorias();
     showSection(categoriasSection);
-    carregarCategorias();
 });
 
-btnVoltarCategorias.addEventListener('click', (e) => {
+/*btnVoltarCategorias.addEventListener('click', (e) => {
     e.preventDefault();
     showSection(mainSection);
-});
+});*/
 
 async function carregarCategorias() {
     const { data, error } = await client.from('categorias').select('*').order('nome');

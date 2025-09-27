@@ -3,13 +3,14 @@ const movimentacaoForm = document.getElementById('movimentacao-form');
 const modalMovimentacao = document.getElementById('modal-movimentacao');
 const modalTitulo = document.getElementById('modal-titulo');
 const btnFecharModal = document.getElementById('btn-fechar-modal');
+//const btnUltimasMovimentacoes = document.getElementById('btn-ultimas-movimentacoes');
 
 //MOVIMENTAÇÃO
-btnUltimasMovimentacoes.addEventListener('click', () => {
+/*btnUltimasMovimentacoes.addEventListener('click', () => {
     relatorioTitulo.textContent = 'Últimas 20 Movimentações';
     carregarRelatorio(20); 
     showSection(relatorioSection);
-});
+});*/
 
 //MOVIMENTAÇÃO
 function abrirModalMovimentacao(id, nome, tipo) {

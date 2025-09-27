@@ -8,20 +8,18 @@
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
-        <!--nav id="nav-section">
-            <button id="btn-ultimas-movimentacoes" class="nav">Movimentações</button>
-            <button id="btn-adicionar-produto" class="nav">Produto</button>
-            <button id="btn-gerenciar-categorias" class="nav secondary">Categorias</button>
-            <button id="btn-relatorio-completo" class="nav secondary">Relatório</button>
-            <button id="btn-logout" class="nav secondary outline">Sair</button>
-        </nav-->
-        <header class="container hidden" id="nav-section">
-            <h1>Controle de Estoque</h1>
-            <nav>
+        <!-- NAVEGAÇÃO -->
+        <header class="container">
+            <nav id="nav-section">
                 <ul>
-                    <li><a href="#" id="link-dashboard">Dashboard</a></li>
-                    <li><a href="#" id="btn-adicionar-produto">Produtos</a></li>
+                    <li><a href="#" id="btn-home-page">Home</a></li>
+                    <li><a href="#" id="btn-produtos">Produtos</a></li>
+                    <li><a href="#" id="btn-gerenciar-categorias">Categorias</a></li>
                     <li><a href="#" id="btn-relatorio-completo">Movimentações</a></li>
+                    <!--li><a href="#" id="btn-logout">Sair</a></li-->
+                </ul>
+                <ul>
+                    <li><small>Olá, <strong id="user-name">Usuário</strong></small></li>
                     <li><a href="#" id="btn-logout">Sair</a></li>
                 </ul>
             </nav>
@@ -29,47 +27,71 @@
         <main>
             <!--LOGIN-->
             <section id="login-section" class="container">
-                <header>
-                    <h2>Estoque DTI-SME</h2>
-                </header>
-                <main>
+                <div>
+                    <h2>DTI-SME</h2>
+                </div>
+                <div>
                     <form id="login-form">
                         <input type="email" id="email" placeholder="Email" required>
                         <input type="password" id="password" placeholder="Senha" required>
                         <button type="submit">Entrar</button>
                     </form>
+                    <p><a href="#" id="link-esqueci-senha">Esqueceu a senha?</a></p>
                     <p id="mensagem"></p>
-                </main>
+                </div>
+            </section>
+            <section id="reset-password-section" class="container hidden" style="max-width: 25rem;">
+                <div>
+                    <h2>Redefinir Senha</h2>
+                    <p>Digite seu e-mail para receber um link de redefinição.</p>
+                </div>
+                <form id="reset-password-form">
+                    <input type="email" id="reset-email" placeholder="Seu e-mail de cadastro" required>
+                    <button type="submit">Enviar Link de Redefinição</button>
+                </form>
+                <a href="#" id="link-voltar-login">← Voltar para o Login</a>
+            </section>
+            <section id="reset-success-section" class="container hidden" style="max-width: 25rem; text-align: center;">
+                <article>
+                    <h3>Verifique seu E-mail!</h3>
+                    <p>Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha em breve.</p>
+                    <a href="#" role="button" id="link-sucesso-voltar-login">Voltar para o Login</a>
+                </article>
+            </section>
+            <!-- CARREGAMENTO -->
+            <section id="loading-section" class="container hidden">
+                <p>Carregando...</p>
             </section>
             <!-- MAIN -->
             <section id="main-section" class="container hidden">
-                <header>
-                    <h1>Painel de Controle</h1>
-                    <p>Visão geral do seu estoque.</p>
-                </header>
-                <hr>
-                <h3>Produtos em Estoque</h3>
-                <figure>
-                    <table role="grid" id="produtos-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col">Descrição</th>
-                                <th scope="col">Estoque</th> <th scope="col" colspan="3">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos-tbody">
-                        </tbody>
-                    </table>
-                </figure>
+                <!--div>
+                    <p>Olá, <strong id="user-name"></strong></p>
+                </div-->
+                <article id="alerta-estoque-zerado" class="hidden">
+                    <header>
+                        <hgroup>
+                            <h3><strong>Alerta:</strong> Visão geral do estoque</h3>
+                            <p>Os seguintes itens precisam de reposição:</p>
+                        </hgroup>
+                    </header>
+                    <ul id="lista-estoque-zerado">
+                    </ul>
+                </article>
+                <div class="grid">
+                </div>
+                <div>
+                    <p>Este é um sistema de controle de estoque desenvolvido como parte do Projeto Integrador do 2º Semestre de 2025 para o setor de TI da Secretaria Municipal de Educação de Jacareí.</p>
+                    <p>A aplicação web permite o gerenciamento completo de produtos, incluindo cadastro, edição, e o registro de todas as movimentações de entrada e saída, oferecendo uma visão clara e atualizada do inventário.</p>
+                </div>
             </section>
             <!-- MOVIMENTAÇÃO -->
             <dialog id="modal-movimentacao">
+                <div>
+                    <!--button aria-label="Close" rel="prev" id="btn-fechar-modal"></button-->
+                    <a href="#" id="btn-fechar-modal">Fechar</a>
+                    <h3 id="modal-titulo">Registrar Movimentação</h3>
+                </div>
                 <article>
-                    <header>
-                        <button aria-label="Close" rel="prev" id="btn-fechar-modal"></button>
-                        <h3 id="modal-titulo">Registrar Movimentação</h3>
-                    </header>
                     <form id="movimentacao-form">
                         <input type="hidden" id="mov-produto-id">
                         <input type="hidden" id="mov-tipo">
@@ -87,47 +109,67 @@
                 </article>
             </dialog>
             <!--- PRODUTOS-->
-            <section id="add-produto-section" class="container hidden">
-                <header>
+            <section id="produtos-section" class="container hidden">
+                <h2>Produtos em Estoque</h2>
+                <div>
+                    <button id="btn-adicionar-produto">Novo Produto</button>
+                </div>
+                <figure>
+                    <table role="grid" id="produtos-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Descrição</th>
+                                <th scope="col">Estoque</th> <th scope="col" colspan="3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="produtos-tbody">
+                        </tbody>
+                    </table>
+                </figure>
+            </section>
+            <section id="add-produto-section" class="container hidden box">
+                <div>
                     <a href="#" id="btn-voltar-add-form">← Voltar</a>
                     <h2>Adicionar Novo Produto</h2> 
-                </header>
+                </div>
                 <form id="add-produto-form"> 
-                    <section class="grid">
+                    <div class="grid">
                         <input type="text" id="add-produto-nome" placeholder="Nome do Produto" required>
                         <select id="add-produto-categoria-select" required>
                             <option value="">Selecione uma categoria...</option>
                         </select>
-                    </section>
-                    <section>
+                    </div>
+                    <div>
                         <label for="add-produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
                         <input type="number" id="add-produto-quantidade-inicial" min="0" value="0" placeholder="Quantidade do produto" required>
-                    </section>
+                    </div>
                     <textarea id="add-produto-descricao" placeholder="Descrição"></textarea>
                     <button type="submit">Salvar Produto</button>
                 </form>
             </section>
-            <section id="edit-produto-section" class="container hidden">
-                <header>
+            <section id="edit-produto-section" class="container hidden box">
+                <div>
                     <a href="#" id="btn-voltar-edit-form">← Voltar</a>
                     <h2>Editar Produto</h2> 
-                </header>
-                <form id="edit-produto-form"> <input type="hidden" id="edit-produto-id"> <section class="grid">
+                </div>
+                <form id="edit-produto-form"> <input type="hidden" id="edit-produto-id"> 
+                    <div class="grid">
                         <input type="text" id="edit-produto-nome" placeholder="Nome do Produto" required>
                         <select id="edit-produto-categoria-select" required>
                             <option value="">Selecione uma categoria...</option>
                         </select>
-                    </section>
+                    </div>
                     <textarea id="edit-produto-descricao" placeholder="Descrição"></textarea>
                     <button type="submit">Salvar Alterações</button>
                 </form>
             </section>
             <!-- CATEGORIAS -->
-            <section id="categorias-section" class="container hidden">
-                <header>
-                    <a href="#" id="btn-voltar-categorias">← Voltar</a>
+            <section id="categorias-section" class="container hidden box">
+                <div>
+                    <!--a href="#" id="btn-voltar-categorias">← Voltar</a-->
                     <h2>Gerenciar Categorias</h2>
-                </header>
+                </div>
                 <form id="categoria-form">
                     <input type="hidden" id="categoria-id">
                     <input type="text" id="categoria-nome" placeholder="Nome da Categoria" required>
@@ -145,10 +187,10 @@
             </section>
             <!-- RELATÓRIO -->
             <section id="relatorio-section" class="container hidden">
-                <header>
-                    <a href="#" id="btn-voltar-relatorio">← Voltar</a>
+                <div>
+                    <!--a href="#" id="btn-voltar-relatorio">← Voltar</a-->
                     <h2 id="relatorio-titulo">Relatório de Movimentações</h2>
-                </header>
+                </div>
                 <figure>
                     <table role="grid" id="relatorio-table">
                         <thead>
@@ -168,7 +210,8 @@
             </section>
         </main>
         <footer class="container">
-            <small>&copy; 2025 - Sistema de Controle de Estoque</small>
+            <small>&copy; 2025 - Sistema de Controle de Estoque - <a href="https://educajacarei.com.br/">Secretaria de Educação de Jacareí</a></small>
+            <p><small>Feito com <a href="https://picocss.com/">picocss</a></small></p>
         </footer>
         <!--SCRIPT DO SUPABASE-->
         <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -179,6 +222,5 @@
         <script src="js/movimentacao.js"></script>
         <script src="js/produto.js"></script>
         <script src="js/relatorio.js"></script>
-        <script src="js/ui.js"></script>
     </body>
 </html>

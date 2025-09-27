@@ -1,7 +1,9 @@
 //ADICIONAR PRODUTOS
+const btnProdutosSection = document.getElementById('btn-produtos');
 const addProdutoForm = document.getElementById('add-produto-form');
 const btnAdicionarProduto = document.getElementById('btn-adicionar-produto');
 const btnVoltarAddForm = document.getElementById('btn-voltar-add-form');
+const produtosTbody = document.getElementById('produtos-tbody');
 
 //EDITAR PRODUTO
 const editProdutoForm = document.getElementById('edit-produto-form');
@@ -143,11 +145,18 @@ btnAdicionarProduto.addEventListener('click', () => {
     showSection(addProdutoSection);
 });
 
+btnProdutosSection.addEventListener('click', async (e) => {
+    e.preventDefault();
+    showSection(loadingSection);
+    await carregarProdutos();
+    showSection(produtosSection);
+});
 btnVoltarAddForm.addEventListener('click', (e) => { 
     e.preventDefault(); 
-    showSection(mainSection); 
+    showSection(produtosSection); 
 });
 
 btnVoltarEditForm.addEventListener('click', (e) => { 
-    e.preventDefault(); showSection(mainSection); 
+    e.preventDefault(); 
+    showSection(produtosSection); 
 });
