@@ -1,36 +1,132 @@
-/*CSS para algumas modificações do HTML*/
+/* ========================
+   Estilos gerais
+======================== */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.box{
+  max-width: 50%;
+}
+
 .hidden {
-display: none;
+  display: none !important;
 }
-.entrada { color: var(--pico-color-green-500); font-weight: bold; }
-.saida { color: var(--pico-color-red-500); font-weight: bold; }
 
+.entrada {
+  color: var(--pico-color-green-500);
+  font-weight: bold;
+}
+.saida {
+  color: var(--pico-color-red-500);
+  font-weight: bold;
+}
+
+/* ========================
+   Cabeçalho e Navegação
+======================== */
+header {
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+header nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding-left: 0;
+  flex-wrap: wrap;
+}
+
+header nav ul li a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+header nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* ========================
+   Login
+======================== */
 #login-section {
-    max-width: 20em; 
-    padding-top: 10%;
+  max-width: 25rem;
+  margin: 2rem auto;
 }
 
-#main-section {
-    max-width: 80%; 
-    padding-top: 1%;
+#login-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-#add-produto-section {
-    max-width: 80%; 
-    padding-top: 1%;
+/* ========================
+   Tabelas
+======================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
 }
 
-#edit-produto-section {
-    max-width: 80%; 
-    padding-top: 1%;
+table th,
+table td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--pico-muted-border-color);
 }
 
-#categorias-section {
-    max-width: 80%; 
-    padding-top: 1%;
+/* ========================
+   Botões customizados
+======================== */
+button,
+a.button {
+  border-radius: 0.5rem;
+  /*padding: 0.6rem 1rem;*/
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  margin: 0.7%;
 }
 
-#relatorio-section {
-    max-width: 80%; 
-    padding-top: 1%;
+button:hover,
+a.button:hover {
+  opacity: 0.9;
+}
+
+/* ========================
+   Rodapé
+======================== */
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  border-top: 1px solid var(--pico-muted-border-color);
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+/* ========================
+   Responsividade
+======================== */
+@media (max-width: 768px) {
+  header nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  table th,
+  table td {
+    font-size: 0.9rem;
+  }
+}
+
+/* ========================
+   Dashboard
+======================== */
+#alerta-estoque-zerado{
+  background-color: var(--pico-card-background-color); 
+  border-left: 5px solid var(--pico-color-amber-500);
 }
