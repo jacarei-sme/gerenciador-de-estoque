@@ -1,12 +1,10 @@
-//RELATÓRIO 
 const relatorioTbody = document.getElementById('relatorio-tbody');
 const relatorioTitulo = document.getElementById('relatorio-titulo');
 const btnRelatorioCompleto = document.getElementById('btn-relatorio-completo');
-//const btnVoltarRelatorio = document.getElementById('btn-voltar-relatorio');
 
 async function carregarRelatorio(limite = null) {
     let query = client
-        .from('relatorio_completo') //Chama a VIEW criada no supabase contendo as movimentações e usuário que fez.
+        .from('relatorio_completo')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -47,12 +45,8 @@ async function carregarRelatorio(limite = null) {
 
 btnRelatorioCompleto.addEventListener('click', async () => {
     relatorioTitulo.textContent = 'Relatório de Movimentações';
+    
     showSection(loadingSection);
     await carregarRelatorio();
     showSection(relatorioSection);
 });
-
-/*btnVoltarRelatorio.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection(mainSection);
-});*/

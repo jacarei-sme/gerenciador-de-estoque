@@ -11,14 +11,13 @@
         <!-- NAVEGAÇÃO -->
         <header class="container">
             <nav id="nav-section">
-                <ul>
+                <ul> <!-- Esquerda-->
                     <li><a href="#" id="btn-home-page">Home</a></li>
                     <li><a href="#" id="btn-produtos">Produtos</a></li>
                     <li><a href="#" id="btn-gerenciar-categorias">Categorias</a></li>
                     <li><a href="#" id="btn-relatorio-completo">Movimentações</a></li>
-                    <!--li><a href="#" id="btn-logout">Sair</a></li-->
                 </ul>
-                <ul>
+                <ul> <!-- Direita-->
                     <li><small>Olá, <strong id="user-name">Usuário</strong></small></li>
                     <li><a href="#" id="btn-logout">Sair</a></li>
                 </ul>
@@ -60,13 +59,10 @@
             </section>
             <!-- CARREGAMENTO -->
             <section id="loading-section" class="container hidden">
-                <p>Carregando...</p>
+                <p><strong>Carregando...</strong></p>
             </section>
             <!-- MAIN -->
             <section id="main-section" class="container hidden">
-                <!--div>
-                    <p>Olá, <strong id="user-name"></strong></p>
-                </div-->
                 <article id="alerta-estoque-zerado" class="hidden">
                     <header>
                         <hgroup>
@@ -99,9 +95,9 @@
                         <label for="mov-justificativa">Justificativa (Opcional)</label>
                         <textarea id="mov-justificativa" rows="3"></textarea>
                         
-                        <footer>
+                        <div>
                             <button type="submit">Confirmar</button>
-                        </footer>
+                        </div>
                     </form>
                 </article>
             </dialog>
@@ -115,7 +111,7 @@
                     <input type="search" id="input-busca-produto" placeholder="Buscar produto por nome...">
                     <select id="filtro-categoria-select">
                         <option value="todos">Todas as categorias</option>
-                        </select>
+                    </select>
                 </form>
                 <figure>
                     <table role="grid" id="produtos-table">
@@ -170,7 +166,6 @@
             <!-- CATEGORIAS -->
             <section id="categorias-section" class="container hidden box">
                 <div>
-                    <!--a href="#" id="btn-voltar-categorias">← Voltar</a-->
                     <h2>Gerenciar Categorias</h2>
                 </div>
                 <form id="categoria-form">
@@ -185,13 +180,12 @@
                         <tr><th>Nome</th><th>Ações</th></tr>
                     </thead>
                     <tbody id="categorias-tbody">
-                        </tbody>
+                    </tbody>
                 </table>
             </section>
             <!-- RELATÓRIO -->
             <section id="relatorio-section" class="container hidden">
                 <div>
-                    <!--a href="#" id="btn-voltar-relatorio">← Voltar</a-->
                     <h2 id="relatorio-titulo">Relatório de Movimentações</h2>
                 </div>
                 <figure>
@@ -207,7 +201,7 @@
                             </tr>
                         </thead>
                         <tbody id="relatorio-tbody">
-                            </tbody>
+                        </tbody>
                     </table>
                 </figure>
             </section>

@@ -32,14 +32,12 @@ async function deletarCategoria(id) {
 }
 
 async function popularDropdownCategorias(idDoSelect) {
-    // 1. Encontra o elemento <select> específico usando o ID que foi passado como argumento
     const selectElement = document.getElementById(idDoSelect);
     if (!selectElement) {
         console.error(`Dropdown com id '${idDoSelect}' não encontrado.`);
         return;
     }
 
-    // 2. Busca todas as categorias no Supabase, ordenadas por nome
     const { data, error } = await client
         .from('categorias')
         .select('*')
@@ -50,10 +48,8 @@ async function popularDropdownCategorias(idDoSelect) {
         return;
     }
 
-    // 3. Limpa as opções antigas, mantendo apenas a primeira ("Selecione...")
     selectElement.innerHTML = '<option value="">Selecione uma categoria...</option>';
 
-    // 4. Cria e adiciona uma nova <option> para cada categoria encontrada
     data.forEach(cat => {
         const option = document.createElement('option');
         option.value = cat.id;
@@ -66,6 +62,7 @@ async function popularFiltroCategorias() {
     const filtroSelect = document.getElementById('filtro-categoria-select');
     
     const { data, error } = await client.from('categorias').select('*').order('nome');
+
     if (error) {
         console.error("Erro ao buscar categorias para o filtro:", error);
         return;
@@ -87,8 +84,10 @@ btnGerenciarCategorias.addEventListener('click', async () => {
 
 categoriaForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const nomeCategoria = document.getElementById('categoria-nome').value;
     const { error } = await client.from('categoria').insert([{ nome: nomeCategoria }]);
+
     if (error) {
         alert("Erro ao salvar categoria: " + error.message);
     } else {

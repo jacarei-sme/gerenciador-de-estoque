@@ -14,56 +14,6 @@ let listaCompletaProdutos = [];
 inputBuscaProduto.addEventListener('keyup', renderizarTabelaProdutos);
 filtroCategoriaSelect.addEventListener('change', renderizarTabelaProdutos);
 
-/*async function carregarProdutos() {
-    let { data: movimentacoes, error: movError } = await client
-        .from('movimentacao')
-        .select('id_produto, tipo, quantidade');
-
-    if (movError) {
-        console.error('Erro ao buscar movimentações:', movError);
-        return;
-    }
-    
-    const estoque = {};
-    movimentacoes.forEach(mov => {
-        if (!estoque[mov.id_produto]) {
-            estoque[mov.id_produto] = 0;
-        }
-        if (mov.tipo === 'ENTRADA') {
-            estoque[mov.id_produto] += mov.quantidade;
-        } else { // == 'SAIDA'
-            estoque[mov.id_produto] -= mov.quantidade;
-        }
-    });
-
-
-    const { data: produtos, error } = await client
-        .from('produto')
-        .select('*')
-        .order('nome', { ascending: true });
-
-    if (error) {
-        console.error('Erro ao carregar produtos:', error);
-        return;
-    }
-
-    produtosTbody.innerHTML = '';
-    produtos.forEach(produto => {
-
-        const tr = document.createElement('tr');
-
-        tr.innerHTML = `
-            <td>${produto.nome}</td>
-            <td>${produto.descricao}</td>
-            <td><strong>${produto.quantidade}</strong></td>
-            <td><button class="outline" onclick="prepararEdicao(${produto.id},'${produto.nome}', '${produto.descricao}')">Editar</button></td>
-            <td><button onclick="abrirModalMovimentacao(${produto.id}, '${produto.nome}', 'ENTRADA')">Entrada</button></td>
-            <td><button class="contrast" onclick="abrirModalMovimentacao(${produto.id}, '${produto.nome}', 'SAIDA')">Saída</button></td>
-        `;
-        produtosTbody.appendChild(tr);
-    });
-}*/
-
 async function carregarListaCompletaProdutos() {
     const { data: produtos, error } = await client
         .from('produto')
@@ -133,10 +83,7 @@ btnProdutosSection.addEventListener('click', async (e) => {
     e.preventDefault();
     showSection(loadingSection);
     
-    // Popula o dropdown de categorias para o filtro
-    await popularFiltroCategorias(); 
-    
-    // Carrega a lista completa de produtos
+    await popularFiltroCategorias();    
     await carregarListaCompletaProdutos();
     
     showSection(produtosSection);
@@ -150,6 +97,7 @@ btnAdicionarProduto.addEventListener('click', () => {
 
 addProdutoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const nome = document.getElementById('add-produto-nome').value;
     const descricao = document.getElementById('add-produto-descricao').value;
     const id_categoria = document.getElementById('add-produto-categoria-select').value;
@@ -214,6 +162,8 @@ editProdutoForm.addEventListener('submit', async (e) => {
     if (error) {
         alert('Erro ao atualizar o produto: ' + error.message);
     } else {
+        showSection(loadingSection);
+        await carregarProdutosComEstoqueZerado();
         showSection(produtosSection);
     }
 });
