@@ -6,7 +6,7 @@ Este é um sistema de controle de estoque desenvolvido como parte do Projeto Int
 
 A aplicação web permite o gerenciamento completo de produtos, incluindo cadastro, edição, e o registro de todas as movimentações de entrada e saída, oferecendo uma visão clara e atualizada do inventário.
 
-O site pode ser acessado por aqui: https://elton-fonseca-dtisme.github.io/gerenciador-de-estoque/
+O site pode ser acessado por aqui: https://jacarei-sme.github.io/gerenciador-de-estoque/
 
 ## ✨ Funcionalidades Principais
 
