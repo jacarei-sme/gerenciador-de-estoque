@@ -15,6 +15,9 @@ const relatorioSection = document.getElementById('relatorio-section');
 const produtosSection = document.getElementById('produtos-section');
 const btnHomePage = document.getElementById('btn-home-page');
 const loadingSection = document.getElementById('loading-section');
+const updatePasswordSection = document.getElementById('update-password-section');
+const resetPasswordSection = document.getElementById('reset-password-section');
+const resetSuccessSection = document.getElementById('reset-success-section');
 
 const btnLogout = document.getElementById('btn-logout');
 
@@ -29,6 +32,7 @@ function showSection(sectionToShow) {
     loadingSection.classList.add('hidden');
     resetPasswordSection.classList.add('hidden');
     resetSuccessSection.classList.add('hidden');
+    updatePasswordSection.classList.add('hidden');
 
     sectionToShow.classList.remove('hidden');
 }
