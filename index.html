@@ -12,14 +12,15 @@
         <header class="container">
             <nav id="nav-section">
                 <ul> <!-- Esquerda-->
-                    <li><a href="#" id="btn-home-page">Home</a></li>
-                    <li><a href="#" id="btn-produtos">Produtos</a></li>
-                    <li><a href="#" id="btn-gerenciar-categorias">Categorias</a></li>
-                    <li><a href="#" id="btn-relatorio-completo">Movimentações</a></li>
+                    <li><button type="button" id="btn-home-page" class="secondary outline">Home</button></li>
+                    <li><button type="button" id="btn-produtos" class="secondary outline">Produtos</button></li>
+                    <li><button type="button" id="btn-gerenciar-categorias" class="secondary outline">Categoria</button></li>
+                    <li><button type="button" id="btn-relatorio-completo" class="secondary outline">Movimentações</button></li>
                 </ul>
                 <ul> <!-- Direita-->
                     <li><small>Olá, <strong id="user-name">Usuário</strong></small></li>
-                    <li><a href="#" id="btn-logout">Sair</a></li>
+                    <li><button type="button" id="btn-logout" class="secondary outline">Sair</button></li>
+                    <!--li><a href="#" id="btn-logout">Sair</a></li-->
                 </ul>
             </nav>
         </header>
@@ -134,17 +135,23 @@
                     <h2>Adicionar Novo Produto</h2> 
                 </div>
                 <form id="add-produto-form"> 
-                    <div class="grid">
-                        <input type="text" id="add-produto-nome" placeholder="Nome do Produto" required>
+                    <div class="container">
+                        <label for="add-produto-nome">Nome do Produto</label>
+                        <input type="text" id="add-produto-nome" placeholder="Ex.: Mouse" required>
+                    </div>
+                    <div class="container">
                         <select id="add-produto-categoria-select" required>
-                            <option value="">Selecione uma categoria...</option>
+                        <option value="">Selecione uma categoria...</option>
                         </select>
                     </div>
                     <div>
                         <label for="add-produto-quantidade-inicial">Quantidade Inicial em Estoque</label>
                         <input type="number" id="add-produto-quantidade-inicial" min="0" value="0" placeholder="Quantidade do produto" required>
                     </div>
-                    <textarea id="add-produto-descricao" placeholder="Descrição"></textarea>
+                    <div class="container">
+                        <label for="add-produto-descricao">Descrição</label>
+                        <textarea id="add-produto-descricao" placeholder="Ex.: Produto usado na manutenção.."></textarea>
+                    </div>
                     <button type="submit">Salvar Produto</button>
                 </form>
             </section>
