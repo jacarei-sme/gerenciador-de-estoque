@@ -44,7 +44,7 @@ resetPasswordForm.addEventListener('submit', async (e) => {
 
 client.auth.onAuthStateChange((event, session) => {
   if (event === 'PASSWORD_RECOVERY') {
-    document.getElementById('nav-section').classList.add('hidden'); 
+    navSection.classList.add('hidden'); 
     showSection(updatePasswordSection);
   }
 });
