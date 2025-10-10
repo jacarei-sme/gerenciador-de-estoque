@@ -35,6 +35,37 @@ function showSection(sectionToShow) {
     updatePasswordSection.classList.add('hidden');
 
     sectionToShow.classList.remove('hidden');
+
+    //Parte do código de acessibilidade
+    const baseTitle = "Controle de Estoque DTI-SME";
+    switch(sectionToShow.id) {
+        case 'login-section':
+            document.title = `Página de Login - ${baseTitle}`;
+            break;
+        case 'update-password-section':
+            document.title = `Pedido de redefinição de senha - ${baseTitle}`;
+            break;
+        case 'reset-password-section':
+            document.title = `Redefina sua senha - ${baseTitle}`;
+            break;
+        case 'main-section':
+            document.title = `Painel Principal - ${baseTitle}`;
+            break;
+        case 'produtos-section':
+            document.title = `Produtos - ${baseTitle}`;
+            break;
+        case 'add-produto-section':
+            document.title = `Adicionar Produtos - ${baseTitle}`;
+            break;
+        case 'edit-produto-section':
+            document.title = `Editar Produtos - ${baseTitle}`;
+            break;
+        case 'relatorio-section':
+            document.title = `Relatório - ${baseTitle}`;
+            break;
+        default:
+            document.title = baseTitle;
+    }
 }
 
 btnHomePage.addEventListener('click', async (e) => {
