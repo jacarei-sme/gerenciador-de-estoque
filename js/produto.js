@@ -44,9 +44,11 @@ function renderizarTabelaProdutos() {
     });
 
     produtosTbody.innerHTML = '';
+    const feedbackEl = document.getElementById('feedback-dinamico');
 
     if (produtosFiltrados.length === 0) {
         produtosTbody.innerHTML = '<tr><td colspan="4">Nenhum produto encontrado.</td></tr>';
+        feedbackEl.textContent = 'Nenhum produto encontrado.';
         return;
     }
 
@@ -65,6 +67,8 @@ function renderizarTabelaProdutos() {
         `;
         produtosTbody.appendChild(tr);
     });
+    
+    feedbackEl.textContent = `${produtosFiltrados.length} produtos encontrados. A tabela foi atualizada.`;
 }
 
 function prepararEdicao(id, nome, descricao, id_categoria) {

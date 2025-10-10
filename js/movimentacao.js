@@ -3,7 +3,11 @@ const modalMovimentacao = document.getElementById('modal-movimentacao');
 const modalTitulo = document.getElementById('modal-titulo');
 const btnFecharModal = document.getElementById('btn-fechar-modal');
 
+let elementoQueAbriuModal = null;
+
 function abrirModalMovimentacao(id, nome, tipo) {
+
+    elementoQueAbriuModal = document.activeElement;
 
     modalTitulo.textContent = `Registrar ${tipo === 'ENTRADA' ? 'Entrada' : 'Retirada'} de: ${nome}`;
     document.getElementById('mov-produto-id').value = id;
@@ -15,6 +19,10 @@ function abrirModalMovimentacao(id, nome, tipo) {
 btnFecharModal.addEventListener('click', () => {
     movimentacaoForm.reset();
     modalMovimentacao.close();
+
+    if(elementoQueAbriuModal){
+        elementoQueAbriuModal.focus();
+    }
 });
 
 movimentacaoForm.addEventListener('submit', async (e) => {
