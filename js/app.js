@@ -14,10 +14,12 @@ const categoriasSection = document.getElementById('categorias-section');
 const relatorioSection = document.getElementById('relatorio-section');
 const produtosSection = document.getElementById('produtos-section');
 const btnHomePage = document.getElementById('btn-home-page');
+const btnDocumentacao = document.getElementById('btn-documentacao');
 const loadingSection = document.getElementById('loading-section');
 const updatePasswordSection = document.getElementById('update-password-section');
 const resetPasswordSection = document.getElementById('reset-password-section');
 const resetSuccessSection = document.getElementById('reset-success-section');
+const documentacaoSection = document.getElementById('documentacao-section');
 
 const btnLogout = document.getElementById('btn-logout');
 
@@ -33,6 +35,7 @@ function showSection(sectionToShow) {
     resetPasswordSection.classList.add('hidden');
     resetSuccessSection.classList.add('hidden');
     updatePasswordSection.classList.add('hidden');
+    documentacaoSection.classList.add('hidden');
 
     sectionToShow.classList.remove('hidden');
 
@@ -74,6 +77,11 @@ btnHomePage.addEventListener('click', async (e) => {
     await carregarProdutosComEstoqueZerado();
     showSection(mainSection);
 });
+
+btnDocumentacao.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(documentacaoSection);
+})
 
 async function carregarProdutosComEstoqueZerado() {
     const alertaContainer = document.getElementById('alerta-estoque-zerado');

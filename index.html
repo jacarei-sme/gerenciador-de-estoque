@@ -19,6 +19,7 @@
                 </ul>
                 <ul> <!-- Direita-->
                     <li><small>Olá, <strong id="user-name">Usuário</strong></small></li>
+                    <li><button type="button" id="btn-documentacao" class="secondary outline">Documentação</button></li>
                     <li><button type="button" id="btn-logout" class="secondary outline">Sair</button></li>
                     <!--li><a href="#" id="btn-logout">Sair</a></li-->
                 </ul>
@@ -223,6 +224,90 @@
                         </tbody>
                     </table>
                 </figure>
+            </section>
+            <!--DOCUMENTAÇÃO-->
+            <section id="documentacao-section" class="container hidden">
+                <div>
+                    <button type="button" id="btn-fechar-documentacao" class="secondary outline hidden">Voltar ao Login</button>
+                    <h2 id="documentacao-titulo">Documentação</h2>
+                    <hr>
+                </div>
+                <div>
+                    <h3><b>Guia de Usuário:</b> Sistema de Controle de Estoque</h3>
+                    <p>Este guia descreve como utilizar as funcionalidades do Sistema de Gerenciamento de Estoque feito para pelo Grupo 012 para o <b>Departamento de Tecnologia da Informação</b> da <b>Secretaria Municipal de Educação de Jacareí</b>.</p>
+                    <p>Para acessar, você deve primeiro seguir para este <a href="https://jacarei-sme.github.io/gerenciador-de-estoque/">link</a></p>
+                    <!-- Acesso ao sistema-->
+                    <div class="container">
+                        <h4>Acesso ao Sistema.</h4>
+                        <p>Primeiro, para acessar o sistema, será necessário fazer o login.</p>
+                        <div class="div-center">
+                            <img src="img/loginPagina.jpg" alt="Imagem com a Tela de Login do Sistema de Gerencimaneto de Estoque">
+                            <p><b>Fonte:</b> Autores.</p>
+                        </div>
+                        <p><b>Autenticação:</b> Acesso a tela inicial do sistema. Para entrar, você deve fornecer primeiro seu e-mail e senha cadastrados.</p>
+                    </div>
+                    <!-- Página principal-->
+                    <div class="container">
+                        <h4>Página Principal</h4>
+                        <p>Após o login, você será redirecionado a página principal, que é a central de operações do sistema. Conforme imagem abaixo:</p>
+                        <div class="div-center">
+                            <img src="img/principalPagina.jpg" alt="Imagem com a Tela Principal do Sistema de Gerenciamento de Estoque">
+                            <p><b>Fonte:</b> Autores.</p>
+                        </div>
+                        <p><b>Ações Principais: </b>Logo após acesar a <b>Página Principal</b>, será apresentado as opções de acessar os <b>Produtos</b>, <b>Categorias</b> e <b>Relatório</b>.</p>
+                        <p><b>Visão Geral do Estoque: </b>Logo no meio da <b>Página Principal</b> será apresentado uma lista com os itens que estão com o estoque zerado no momento do acesso.</p>
+                    </div>
+                    <!--Gerenciamento de produtos-->
+                    <div class="container">
+                        <h4>Gerenciamento de Produtos</h4>
+                        <p>O sistema permite um controle quase completo sobre o cadastro dos produtos. Na imagem abaixo, temos a tela da <b>Página de Produtos</b>.</p>
+                        <div class="div-center">
+                            <img src="img/produtoPagina.jpg" alt="Imagem com a Tela de Produtos do Sistema de Gerenciamento de Estoque">
+                            <p><b>Fonte: </b>Autores.</p>
+                        </div>
+                        <h5>Adicionar Novo Produto</h5>
+                        <p><b>1. </b>Na <b>Tela de Produtos</b>, clique em <b>Adicionar Produto</b>.</p>
+                        <p><b>2. </b>Será aberto um formulário onde deverá ser preenchido o nome, a descrição e a quantidade inicial do item.</p>
+                        <p><b>3. </b>Após preencher, clique em <b>Salvar</b> para que o produto seja adicionado ao estoque e apareça na lista principal.</p>
+                        <h5>Editar um Produto Existente</h5>
+                        <p><b>1. </b>Na <b>Tela de Produtos</b>, localize o item que se deseja editar.</p>
+                        <p><b>2. </b>Clique na opção <b>Editar</b>.</p>
+                        <p><b>3. </b>O formulário de edição será exibido, permitindo a edição do nome ou da descrição do item.</p>
+                        <p><b>4. </b>Clique em <b>Confirmar</b> para salvar e atualizar as informações do produto.</p>
+                    </div>
+                    <!--Criar registro de movimentação-->
+                    <div class="container">
+                        <h4>Registro de Movimentações de Estoque</h4>
+                        <p>Aqui que esta a ideia principal do projeto, nesta parte é onde será feito as atualizações do estoque, podendo registrar se está sendo feito uma <b>Saída</b> ou uma <b>Entrada</b> do produto no estoque. A imagem abaixo é um exemplo da tela que contém o formulário para esse registro.</p>
+                        <div class="div-center">
+                            <img src="img/movimentacaoPagina.jpg" alt="Imagem com o formulário de Registrar Entrada de um produto">
+                            <p><b>Fonte: </b>Autores.</p>
+                        </div>
+                        <h5>Registrar Entrada ou Saída</h5>
+                        <p><b>1. </b>Na <b>Tela de Produtos</b>, localize o item que se deseja editar.</p>
+                        <p><b>2. </b>Clique no botão ao lado para selecionar qual movimentação deseja fazer: <b>Entrada</b> ou <b>Retirada</b>.</p>
+                        <p><b>3. </b>Uma janela será aberta, permitindo que se registre a movimentação.</p>
+                        <p><b>4. </b>Após preencher as informações, clique em <b>Confirmar</b> para registrar a movimentação.</p>
+                    </div>
+                    <!--Acessando relatório-->
+                    <div class="container">
+                        <h4>Relatório e Histórico</h4>
+                        <p>O sistema oferece recursos para visualizar o histórico das movimentações feitas pelos usuários, facilitando o controle. Abaixo esta uma imagem demontrando como será exibido as informações.</p>
+                        <div class="div-center">
+                            <img src="img/relatorioPagina.jpg" alt="Imagem com a Página de Relatórios aberta">
+                            <p><b>Fonte: </b>Autores.</p>
+                        </div>
+                        <h5>Informações do relatório</h5>
+                        <p>Atualmente, o relatório apenas gera uma tela demonstrando todas as movimentações feitas pelos usuários. As informações apresentadas na tela são: </p>
+                        <p><b>- </b>Data da movimentação. (Atualmente a hora é demonstrada em UTC)</p>
+                        <p><b>- </b>Produto movimentado.</p>
+                        <p><b>- </b>Tipo da movimentação. (Entrada ou Saída)</p>
+                        <p><b>- </b>Quantidade.</p>
+                        <p><b>- </b>Usuário que fez a operação.</p>
+                        <p><b>- </b>Justificativa.</p>
+                    </div>
+                </div>
+                
             </section>
         </main>
         <footer class="container">
