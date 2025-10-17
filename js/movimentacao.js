@@ -49,7 +49,7 @@ movimentacaoForm.addEventListener('submit', async (e) => {
         modalMovimentacao.close();
 
         showSection(loadingSection);
-        await carregarProdutosComEstoqueZerado();
+        await carregarListaCompletaProdutos();    
         showSection(produtosSection);
     }
 });

@@ -120,6 +120,7 @@ addProdutoForm.addEventListener('submit', async (e) => {
     if (produtoError) {
         alert('Erro ao cadastrar o produto: ' + produtoError.message);
         console.error("Erro ao inserir produto:", produtoError);
+        
         return;
     }
 
@@ -144,6 +145,8 @@ addProdutoForm.addEventListener('submit', async (e) => {
         }
     }
 
+    await carregarListaCompletaProdutos();
+    
     showSection(produtosSection);
 });
 
@@ -167,7 +170,8 @@ editProdutoForm.addEventListener('submit', async (e) => {
         alert('Erro ao atualizar o produto: ' + error.message);
     } else {
         showSection(loadingSection);
-        await carregarProdutosComEstoqueZerado();
+        
+        await carregarListaCompletaProdutos();    
         showSection(produtosSection);
     }
 });
